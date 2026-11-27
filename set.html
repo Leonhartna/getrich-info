@@ -1,3 +1,13 @@
+แก้ไขการแสดงผลบนหน้าจอโทรศัพท์เรียบร้อยแล้วครับ:
+
+* **หัวข้อย่อยของจี้**: ย่อข้อความจาก `จี้เครื่องรางช่องที่ 1` เหลือแค่ `จี้ที่ 1` (`จี้ที่ 2`, `จี้ที่ 3`, `จี้ที่ 4`) เพื่อลดความยาวของป้ายฝั่งซ้าย
+* **ปุ่มระดับจี้ (`Normal`, `[ดาร์ค]`, `[ไวท์]`)**: เพิ่มพื้นที่ให้กลุ่มปุ่มและใส่ `white-space: nowrap` ที่ปุ่ม `.pvar-btn` เพื่อให้ `[ดาร์ค]` อยู่บรรทัดเดียวไม่ตกบรรทัดเหมือนในภาพ
+
+
+
+---
+
+```html
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -292,6 +302,7 @@
       background-color: var(--panel-dark);
       color: #ffffff;
       cursor: pointer;
+      white-space: nowrap;
     }
 
     .tier-btn.active[data-tier="evo"] {
@@ -397,25 +408,30 @@
     }
 
     .slot-title {
-      font-size: 0.82rem;
+      font-size: 0.84rem;
       font-weight: 700;
       color: #ffffff;
+      white-space: nowrap;
+      flex-shrink: 0;
     }
 
     .pendant-var-group {
       display: inline-flex;
       gap: 4px;
+      flex-shrink: 0;
     }
 
     .pvar-btn {
-      padding: 3px 8px;
-      font-size: 0.74rem;
+      padding: 4px 8px;
+      font-size: 0.75rem;
       font-weight: 700;
       border-radius: 6px;
       border: 1px solid var(--border);
       background-color: var(--panel-dark);
       color: #ffffff;
       cursor: pointer;
+      white-space: nowrap;
+      line-height: 1.2;
     }
 
     .pvar-btn.active[data-pvar="normal"] {
@@ -704,6 +720,29 @@
 
     @media (max-width: 600px) {
       body { padding: 12px; }
+      .part-picker { padding: 12px; }
+      .pendant-slot-card {
+        grid-template-columns: 64px minmax(0, 1fr);
+        gap: 8px;
+        padding: 10px;
+      }
+      .pendant-thumb-frame {
+        width: 64px;
+        height: 64px;
+      }
+      .slot-badge-row {
+        gap: 4px;
+      }
+      .slot-title {
+        font-size: 0.78rem;
+      }
+      .pendant-var-group {
+        gap: 3px;
+      }
+      .pvar-btn {
+        padding: 4px 6px;
+        font-size: 0.68rem;
+      }
       .char-picker-box {
         grid-template-columns: 88px minmax(0, 1fr);
         gap: 10px;
@@ -1081,7 +1120,7 @@
           <div class="pendant-thumb-frame">${thumbHtml}</div>
           <div class="pendant-slot-body">
             <div class="slot-badge-row">
-              <span class="slot-title">จี้เครื่องรางช่องที่ ${idx + 1}</span>
+              <span class="slot-title">จี้ที่ ${idx + 1}</span>
               <div class="pendant-var-group">${varBtns}</div>
             </div>
 
@@ -1471,11 +1510,11 @@
       totalCount += vData.skills.length;
       const varSuffix = slot.variant === "normal" ? "" : ` ${PENDANT_VAR_LABELS[slot.variant]}`;
       allRowsHtml += renderZoneRows(
-        `จี้ ${pIdx + 1}${varSuffix}`,
+        `จี้ที่ ${pIdx + 1}${varSuffix}`,
         pObj.name,
         "",
         vData.image,
-        `จี้ ${pIdx + 1}`,
+        `จี้ที่ ${pIdx + 1}`,
         vData.skills,
         rowCounter
       );
@@ -1521,3 +1560,5 @@
 
 </body>
 </html>
+
+```
