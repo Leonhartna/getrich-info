@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ข้อมูลจี้เครื่องราง V.2</title>
+  <title>Pendant</title>
   <style>
     :root {
       --primary: #34546c;
@@ -53,7 +53,7 @@
 
     .page-header {
       display: flex;
-      align-items: flex-start;
+      align-items: center;
       justify-content: space-between;
       gap: 12px;
       flex-wrap: wrap;
@@ -69,12 +69,6 @@
       font-size: 1.5rem;
       font-weight: 700;
       color: #ffffff;
-      margin: 0 0 4px 0;
-    }
-
-    p.subtitle {
-      color: var(--muted);
-      font-size: 0.94rem;
       margin: 0;
     }
 
@@ -488,16 +482,18 @@
       width: 100%;
       border-collapse: collapse;
       margin-top: 14px;
+      table-layout: fixed;
     }
 
     .detail-table th,
     .detail-table td {
       text-align: left;
-      padding: 10px 12px;
+      padding: 10px 10px;
       border: 1px solid var(--border);
       line-height: 1.45;
       font-size: 0.92rem;
       color: #ffffff;
+      word-wrap: break-word;
     }
 
     .detail-table th {
@@ -516,19 +512,19 @@
     }
 
     .col-slot {
-      width: 56px;
-      text-align: center;
+      width: 52px;
+      text-align: center !important;
       font-weight: 700;
     }
 
     .col-percent {
-      width: 130px;
-      text-align: center;
+      width: 92px;
+      text-align: center !important;
     }
 
     .col-growth {
-      width: 120px;
-      text-align: center;
+      width: 92px;
+      text-align: center !important;
     }
 
     .percent-badge {
@@ -537,9 +533,9 @@
       border: 1px solid rgba(255, 255, 255, 0.25);
       color: #ffffff;
       font-weight: 700;
-      padding: 3px 9px;
+      padding: 3px 8px;
       border-radius: 999px;
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       white-space: nowrap;
     }
 
@@ -554,9 +550,9 @@
       border: 1px solid rgba(254, 240, 138, 0.45);
       color: var(--growth-text);
       font-weight: 700;
-      padding: 3px 9px;
+      padding: 3px 8px;
       border-radius: 999px;
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       white-space: nowrap;
     }
 
@@ -651,14 +647,14 @@
 
     .compare-table {
       width: 100%;
-      min-width: 780px;
+      min-width: 720px;
       border-collapse: collapse;
       table-layout: fixed;
     }
 
     .compare-table th,
     .compare-table td {
-      padding: 9px 10px;
+      padding: 9px 8px;
       border: 1px solid var(--border);
       vertical-align: middle;
       line-height: 1.45;
@@ -723,12 +719,12 @@
       color: #ffffff;
       font-size: 0.82rem;
       font-weight: 700;
-      text-align: center;
+      text-align: center !important;
       padding: 8px 6px;
     }
 
     .compare-table th.sub-col-head.col-skill {
-      text-align: left;
+      text-align: left !important;
       padding-left: 10px;
     }
 
@@ -744,7 +740,7 @@
 
     .compare-table td.col-percent,
     .compare-table td.col-growth {
-      text-align: center;
+      text-align: center !important;
       background-color: var(--card-soft);
     }
 
@@ -808,10 +804,6 @@
 
       h1 {
         font-size: 1.25rem;
-      }
-
-      p.subtitle {
-        font-size: 0.84rem;
       }
 
       .compare-toggle-btn {
@@ -926,33 +918,36 @@
 
       .detail-table th,
       .detail-table td {
-        padding: 8px 6px;
+        padding: 8px 4px;
         font-size: 0.76rem;
         line-height: 1.42;
       }
 
       .col-slot {
-        width: 34px;
+        width: 32px;
       }
 
-      .col-percent,
+      .col-percent {
+        width: 60px;
+      }
+
       .col-growth {
-        width: auto;
+        width: 60px;
       }
 
       .percent-badge,
       .growth-badge {
-        padding: 2px 6px;
-        font-size: 0.7rem;
+        padding: 2px 5px;
+        font-size: 0.68rem;
       }
 
       .compare-table {
-        min-width: 680px;
+        min-width: 620px;
       }
 
       .compare-table th,
       .compare-table td {
-        padding: 7px 5px;
+        padding: 7px 4px;
         font-size: 0.74rem;
         line-height: 1.4;
       }
@@ -986,8 +981,7 @@
 <div class="container">
   <div class="page-header">
     <div class="page-header-text">
-      <h1>ข้อมูลจี้เครื่องราง V.2</h1>
-      <p class="subtitle">ค้นหาหรือเลือกจี้เครื่องราง แล้วสลับดูแบบ Normal, [ดาร์ค] และ [ไวท์]</p>
+      <h1>Pendant</h1>
     </div>
     <button
       id="toggleCompareBtn"
@@ -1040,7 +1034,7 @@
     <div id="pendantDetails"></div>
   </div>
 
-  <!-- หน้าเปรียบเทียบจี้เครื่องราง (ซ่อนอยู่จนกว่าจะกดปุ่ม "เปรียบเทียบจี้") -->
+  <!-- หน้าเปรียบเทียบจี้เครื่องราง (เปิด-ปิดด้วยปุ่มด้านบน) -->
   <section id="compareSection" class="compare-section is-hidden" aria-label="เปรียบเทียบจี้เครื่องราง">
     <div class="compare-section-header">
       <h2 class="compare-section-title">เปรียบเทียบจี้เครื่องราง V.2</h2>
@@ -1793,12 +1787,12 @@
     container.innerHTML = `
       <table class="compare-table">
         <colgroup>
-          <col style="width: 24%;" />
-          <col style="width: 13%;" />
-          <col style="width: 13%;" />
-          <col style="width: 24%;" />
-          <col style="width: 13%;" />
-          <col style="width: 13%;" />
+          <col style="width: 28%;" />
+          <col style="width: 11%;" />
+          <col style="width: 11%;" />
+          <col style="width: 28%;" />
+          <col style="width: 11%;" />
+          <col style="width: 11%;" />
         </colgroup>
         <thead>
           <tr>
@@ -1807,10 +1801,10 @@
           </tr>
           <tr>
             <th class="sub-col-head col-skill">สกิล</th>
-            <th class="sub-col-head">เปอร์เซ็นต์</th>
+            <th class="sub-col-head">%</th>
             <th class="sub-col-head slot-1-end">เติบโต</th>
             <th class="sub-col-head col-skill">สกิล</th>
-            <th class="sub-col-head">เปอร์เซ็นต์</th>
+            <th class="sub-col-head">%</th>
             <th class="sub-col-head">เติบโต</th>
           </tr>
         </thead>
@@ -2018,7 +2012,7 @@
           <tr>
             <th class="col-slot">ช่อง</th>
             <th>ความสามารถ (Skill)</th>
-            <th class="col-percent">เปอร์เซ็นต์</th>
+            <th class="col-percent">%</th>
             <th class="col-growth">เติบโต</th>
           </tr>
         </thead>
