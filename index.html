@@ -1,0 +1,1513 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GetRich•Info</title>
+  <style>
+    :root {
+      --primary: #34546c;
+      --primary-hover: #284256;
+      --bg: #2c4a5e;
+      --card: #48a9bd;
+      --card-soft: #54b4c7;
+      --card-header: #3897ab;
+      --panel-dark: #34546c;
+      --panel-darker: #284256;
+      --text: #ffffff;
+      --text-dark: #0f172a;
+      --muted: #dbeafe;
+      --border: rgba(255, 255, 255, 0.28);
+      --accent: #3897ab;
+      --growth-bg: #284256;
+      --growth-text: #fef08a;
+      --costume-bg: #284256;
+      --costume-border: rgba(255, 255, 255, 0.35);
+      --costume-text: #fde047;
+      --evo-color: #0284c7;
+      --legend-color: #d97706;
+      --mystic-color: #7c3aed;
+      --dark-color: #284256;
+      --white-color: #0369a1;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 20px;
+      background-color: var(--bg);
+      color: var(--text);
+    }
+
+    .app-container {
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .top-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .top-header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      color: #ffffff;
+    }
+
+    .top-header p {
+      margin: 2px 0 0;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .reset-btn {
+      width: 36px;
+      height: 36px;
+      font-size: 1rem;
+      font-weight: 700;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      background-color: var(--panel-darker);
+      color: #fca5a5;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .reset-btn:hover {
+      background-color: #991b1b;
+      color: #ffffff;
+    }
+
+    .is-hidden {
+      display: none !important;
+    }
+
+    /* Loading */
+    .loading-card {
+      background-color: var(--panel-dark);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px;
+      margin-bottom: 16px;
+    }
+
+    .loading-top {
+      display: flex;
+      justify-content: space-between;
+      font-weight: 700;
+      font-size: 0.94rem;
+      margin-bottom: 10px;
+      color: #ffffff;
+    }
+
+    .loading-track {
+      width: 100%;
+      height: 12px;
+      border-radius: 999px;
+      background-color: var(--panel-darker);
+      overflow: hidden;
+    }
+
+    .loading-fill {
+      width: 15%;
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #54b4c7, #fde047);
+      transition: width 0.25s ease;
+    }
+
+    /* =========================================================
+       พาร์ตที่ 1: ด้านบน — เลือกตัวละคร (มีคอสตูม) + จี้ทั้ง 4
+       ========================================================= */
+    .part-picker {
+      background-color: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px;
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.22);
+    }
+
+    .part-label {
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: #ffffff;
+      background-color: var(--panel-dark);
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      letter-spacing: 0.4px;
+      margin-bottom: 12px;
+    }
+
+    .char-picker-box {
+      display: grid;
+      grid-template-columns: 124px minmax(0, 1fr);
+      gap: 16px;
+      padding: 14px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background-color: var(--card-soft);
+      margin-bottom: 16px;
+    }
+
+    .char-thumb-frame {
+      width: 124px;
+      height: 124px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background-color: var(--panel-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      padding: 6px;
+    }
+
+    .char-thumb-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .empty-thumb {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .char-controls-col {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .picker-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .search-wrap {
+      position: relative;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 9px 12px;
+      font-size: 0.9rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background-color: var(--panel-darker);
+      color: #ffffff;
+      outline: none;
+    }
+
+    .search-input::placeholder {
+      color: rgba(255, 255, 255, 0.65);
+    }
+
+    .search-input:focus {
+      border-color: #fde047;
+      box-shadow: 0 0 0 3px rgba(253, 224, 71, 0.2);
+    }
+
+    .dropdown-select {
+      flex: 1;
+      min-width: 0;
+      padding: 9px 12px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      border-radius: 8px;
+      background-color: #f1f5f9;
+      color: var(--text-dark);
+      cursor: pointer;
+    }
+
+    .clear-icon-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background-color: var(--panel-dark);
+      color: #ffffff;
+      font-weight: 700;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+
+    .clear-icon-btn:hover:not(:disabled) {
+      background-color: #dc2626;
+      border-color: #fca5a5;
+    }
+
+    .clear-icon-btn:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+
+    .char-sub-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .tier-group {
+      display: inline-flex;
+      gap: 6px;
+    }
+
+    .tier-btn {
+      padding: 6px 12px;
+      font-size: 0.84rem;
+      font-weight: 700;
+      border-radius: 7px;
+      border: 1px solid var(--border);
+      background-color: var(--panel-dark);
+      color: #ffffff;
+      cursor: pointer;
+    }
+
+    .tier-btn.active[data-tier="evo"] {
+      background-color: var(--evo-color);
+      border-color: #bae6fd;
+      color: #fff;
+    }
+
+    .tier-btn.active[data-tier="legend"] {
+      background-color: var(--legend-color);
+      border-color: #fde68a;
+      color: #fff;
+    }
+
+    .tier-btn.active[data-tier="mystic"] {
+      background-color: var(--mystic-color);
+      border-color: #ddd6fe;
+      color: #fff;
+    }
+
+    .tier-btn.no-data {
+      opacity: 0.45;
+    }
+
+    .costume-picker {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      flex: 1;
+      min-width: 210px;
+      max-width: 340px;
+    }
+
+    .costume-select {
+      flex: 1;
+      min-width: 0;
+      padding: 6px 10px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border-radius: 7px;
+      border: 1px solid var(--costume-border);
+      background-color: var(--costume-bg);
+      color: var(--costume-text);
+      cursor: pointer;
+    }
+
+    .costume-select:disabled {
+      opacity: 0.55;
+      background-color: var(--panel-dark);
+      border-color: var(--border);
+      color: var(--muted);
+      cursor: not-allowed;
+    }
+
+    .pendants-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .pendant-slot-card {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      background-color: var(--card-soft);
+      display: grid;
+      grid-template-columns: 76px minmax(0, 1fr);
+      gap: 12px;
+      align-items: start;
+    }
+
+    .pendant-thumb-frame {
+      width: 76px;
+      height: 76px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background-color: var(--panel-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      padding: 4px;
+    }
+
+    .pendant-thumb-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .pendant-slot-body {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      min-width: 0;
+    }
+
+    .slot-badge-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .slot-title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .pendant-var-group {
+      display: inline-flex;
+      gap: 4px;
+    }
+
+    .pvar-btn {
+      padding: 3px 8px;
+      font-size: 0.74rem;
+      font-weight: 700;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background-color: var(--panel-dark);
+      color: #ffffff;
+      cursor: pointer;
+    }
+
+    .pvar-btn.active[data-pvar="normal"] {
+      background-color: var(--panel-darker);
+      border-color: #fde047;
+      color: #fde047;
+    }
+
+    .pvar-btn.active[data-pvar="dark"] {
+      background-color: var(--dark-color);
+      border-color: #cbd5e1;
+      color: #fff;
+    }
+
+    .pvar-btn.active[data-pvar="white"] {
+      background-color: var(--white-color);
+      border-color: #bae6fd;
+      color: #fff;
+    }
+
+    .pvar-btn.no-data {
+      opacity: 0.45;
+    }
+
+    .pendant-slot-card .search-input,
+    .pendant-slot-card .dropdown-select {
+      padding: 6px 9px;
+      font-size: 0.82rem;
+    }
+
+    .pendant-slot-card .clear-icon-btn {
+      width: 30px;
+      height: 30px;
+      font-size: 0.82rem;
+    }
+
+    .suggestions-popup {
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      right: 0;
+      background-color: var(--panel-darker);
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      border-radius: 8px;
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.45);
+      z-index: 50;
+      max-height: 220px;
+      overflow-y: auto;
+      display: none;
+    }
+
+    .suggestions-popup.show {
+      display: block;
+    }
+
+    .suggestion-row {
+      padding: 8px 11px;
+      cursor: pointer;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .suggestion-row:hover {
+      background-color: var(--panel-dark);
+    }
+
+    .suggestion-title {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #fde047;
+    }
+
+    .suggestion-desc {
+      display: block;
+      font-size: 0.75rem;
+      color: #e2e8f0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* =========================================================
+       พาร์ตที่ 2: กรอบสกิลทั้งหมดในเซ็ต (แถบชิดกัน + รูปและชื่อในคอลัมน์แรก)
+       ========================================================= */
+    .part-skills {
+      margin-top: 18px;
+      background-color: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px;
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.22);
+    }
+
+    .skills-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .skills-header h2 {
+      margin: 0;
+      font-size: 1.15rem;
+      color: #ffffff;
+    }
+
+    .skills-count {
+      padding: 4px 12px;
+      border-radius: 999px;
+      background-color: var(--panel-dark);
+      border: 1px solid var(--border);
+      color: #fde047;
+      font-size: 0.84rem;
+      font-weight: 700;
+    }
+
+    .combined-skill-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    .combined-skill-table th,
+    .combined-skill-table td {
+      padding: 8px 10px;
+      border: 1px solid var(--border);
+      font-size: 0.88rem;
+      line-height: 1.45;
+      vertical-align: middle;
+      color: #ffffff;
+      overflow-wrap: anywhere;
+    }
+
+    .combined-skill-table th {
+      background-color: var(--panel-dark);
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 0.86rem;
+    }
+
+    .combined-skill-table th.col-desc-hdr {
+      text-align: center;
+    }
+
+    .combined-skill-table th.col-percent-hdr,
+    .combined-skill-table th.col-growth-hdr {
+      text-align: center;
+    }
+
+    .col-zone-cell {
+      width: 152px;
+      text-align: center;
+      background-color: var(--panel-dark) !important;
+      padding: 7px 6px !important;
+    }
+
+    .col-percent-cell {
+      width: 96px;
+      text-align: center;
+    }
+
+    .col-growth-cell {
+      width: 98px;
+      text-align: center;
+    }
+
+    .zone-badge-stack {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+    }
+
+    .group-thumb-box {
+      width: 56px;
+      height: 56px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      background-color: var(--panel-darker);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      padding: 3px;
+      flex-shrink: 0;
+    }
+
+    .group-thumb-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .group-thumb-empty {
+      font-size: 0.7rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .zone-caption-title {
+      font-size: 0.74rem;
+      font-weight: 700;
+      color: #fde047;
+      line-height: 1.25;
+      text-align: center;
+    }
+
+    .zone-caption-name {
+      font-size: 0.74rem;
+      font-weight: 600;
+      color: #f1f5f9;
+      line-height: 1.25;
+      text-align: center;
+    }
+
+    .zone-caption-costume {
+      font-size: 0.69rem;
+      font-weight: 500;
+      color: #cbd5e1;
+      line-height: 1.25;
+      text-align: center;
+    }
+
+    .row-skill-item td.skill-desc-cell {
+      background-color: var(--card-soft);
+      text-align: left;
+    }
+
+    .row-skill-item.alt-row td.skill-desc-cell {
+      background-color: var(--card-header);
+    }
+
+    .row-skill-item td.col-percent-cell,
+    .row-skill-item td.col-growth-cell {
+      background-color: var(--card-soft);
+      text-align: center;
+    }
+
+    .row-skill-item.alt-row td.col-percent-cell,
+    .row-skill-item.alt-row td.col-growth-cell {
+      background-color: var(--card-header);
+    }
+
+    .percent-chip {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background-color: var(--panel-dark);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 0.8rem;
+      white-space: nowrap;
+    }
+
+    .percent-chip.empty {
+      background-color: rgba(40, 66, 86, 0.55);
+      color: #cbd5e1;
+    }
+
+    .growth-chip {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background-color: var(--growth-bg);
+      border: 1px solid rgba(254, 240, 138, 0.45);
+      color: var(--growth-text);
+      font-weight: 700;
+      font-size: 0.8rem;
+      white-space: nowrap;
+    }
+
+    .growth-chip.empty {
+      background-color: rgba(40, 66, 86, 0.55);
+      border-color: transparent;
+      color: #cbd5e1;
+    }
+
+    @media (max-width: 820px) {
+      .pendants-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 600px) {
+      body { padding: 12px; }
+      .char-picker-box {
+        grid-template-columns: 88px minmax(0, 1fr);
+        gap: 10px;
+        padding: 10px;
+      }
+      .char-thumb-frame {
+        width: 88px;
+        height: 88px;
+      }
+      .combined-skill-table th,
+      .combined-skill-table td {
+        padding: 6px 6px;
+        font-size: 0.78rem;
+      }
+      .col-zone-cell {
+        width: 112px !important;
+        padding: 5px 4px !important;
+      }
+      .group-thumb-box {
+        width: 44px;
+        height: 44px;
+      }
+      .zone-caption-title,
+      .zone-caption-name {
+        font-size: 0.68rem;
+      }
+      .zone-caption-costume {
+        font-size: 0.64rem;
+      }
+      .col-percent-cell {
+        width: 68px;
+      }
+      .col-growth-cell {
+        width: 72px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <div class="top-header">
+    <div>
+      <h1>GetRich•Info</h1>
+      <p>เลือกตัวละคร คอสตูม และจี้เครื่องรางทั้ง 4 ช่อง เพื่อแสดงสกิลทั้งหมดด้านล่าง</p>
+    </div>
+    <button type="button" class="reset-btn" title="ล้างค่าทั้งหมด" onclick="resetBuild()">✕</button>
+  </div>
+
+  <div id="loadingBox" class="loading-card">
+    <div class="loading-top">
+      <span>กำลังโหลดฐานข้อมูลตัวละครและจี้เครื่องราง...</span>
+      <span id="loadingPct">15%</span>
+    </div>
+    <div class="loading-track">
+      <div id="loadingBar" class="loading-fill"></div>
+    </div>
+  </div>
+
+  <!-- พาร์ต 1: ด้านบน เลือกตัวละคร (มีคอสตูม) + จี้ทั้ง 4 -->
+  <section id="partPicker" class="part-picker is-hidden">
+    <div class="part-label">เลือกตัวละครและจี้เครื่องราง</div>
+
+    <!-- ตัวละคร + คอสตูม -->
+    <div class="char-picker-box">
+      <div id="charThumb" class="char-thumb-frame">
+        <span class="empty-thumb">ตัวละคร</span>
+      </div>
+
+      <div class="char-controls-col">
+        <div class="picker-row">
+          <div class="search-wrap" id="charSearchWrap">
+            <input
+              id="charSearchInput"
+              class="search-input"
+              type="text"
+              placeholder="ค้นหาชื่อตัวละคร หรือคำในสกิลตัวละคร..."
+              autocomplete="off"
+              oninput="renderCharSuggestions()"
+              onfocus="renderCharSuggestions()"
+              onkeydown="handleSearchEnter(event, 'char')"
+            />
+            <div id="charSuggestions" class="suggestions-popup"></div>
+          </div>
+        </div>
+
+        <div class="picker-row">
+          <select id="charSelect" class="dropdown-select" onchange="onCharSelect(this.value)"></select>
+          <button
+            type="button"
+            id="clearCharBtn"
+            class="clear-icon-btn"
+            title="ล้างตัวละคร"
+            onclick="clearChar()"
+            disabled
+          >✕</button>
+        </div>
+
+        <div class="char-sub-controls">
+          <div id="charTierGroup" class="tier-group"></div>
+
+          <div class="costume-picker">
+            <select
+              id="costumeSelect"
+              class="costume-select"
+              onchange="onCostumeSelect(this.value)"
+              disabled
+            >
+              <option value="">เลือกคอสตูม</option>
+            </select>
+            <button
+              type="button"
+              id="clearCostumeBtn"
+              class="clear-icon-btn"
+              title="ยกเลิกคอสตูม"
+              onclick="onCostumeSelect('')"
+              disabled
+            >✕</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- จี้เครื่องรางทั้ง 4 ช่อง -->
+    <div id="pendantsGrid" class="pendants-grid"></div>
+  </section>
+
+  <!-- พาร์ต 2: ด้านล่าง แสดงสกิลทั้งหมด (ซ่อนจนกว่าจะเลือกอย่างน้อย 1 อย่าง) -->
+  <section id="partSkills" class="part-skills is-hidden">
+    <div class="skills-header">
+      <h2>สกิลทั้งหมดในเซ็ต</h2>
+      <span id="skillsCountBadge" class="skills-count">0 สกิล</span>
+    </div>
+    <div id="skillsTableWrap"></div>
+  </section>
+</div>
+
+<script>
+  const CHAR_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyF9gONpT93rFZA6vIkyTpOvVQhN2cduwOVcWfpUVSC5SC2vkGkgDzJn8AqK6IuNAlm/exec";
+  const PENDANT_WEB_APP_URL = "https://script.google.com/macros/s/AKfycby4fmF9t573ywsirLCRnaQZZqUsPFxeSMX8oH2fhz9E6OtiIlC46LumfuRYLsxfTEOldw/exec";
+
+  const CHAR_TIERS = ["evo", "legend", "mystic"];
+  const CHAR_TIER_LABELS = { evo: "[อีโว]", legend: "[ตำนาน]", mystic: "[มิสติก]" };
+
+  const PENDANT_VARS = ["normal", "dark", "white"];
+  const PENDANT_VAR_LABELS = { normal: "Normal", dark: "[ดาร์ค]", white: "[ไวท์]" };
+
+  let charDatabase = [];
+  let pendantDatabase = [];
+
+  const state = {
+    character: {
+      id: "",
+      tier: "evo",
+      costumeIndex: ""
+    },
+    pendants: [
+      { id: "", variant: "normal" },
+      { id: "", variant: "normal" },
+      { id: "", variant: "normal" },
+      { id: "", variant: "normal" }
+    ]
+  };
+
+  function fetchJsonp(url, timeoutMs = 15000) {
+    return new Promise((resolve, reject) => {
+      const cb = "cbSetBuilder_" + Date.now() + "_" + Math.floor(Math.random() * 99999);
+      const script = document.createElement("script");
+      const timer = setTimeout(() => {
+        cleanup();
+        reject(new Error("หมดเวลาในการเชื่อมต่อ Web App"));
+      }, timeoutMs);
+
+      function cleanup() {
+        clearTimeout(timer);
+        delete window[cb];
+        if (script.parentNode) script.parentNode.removeChild(script);
+      }
+
+      window[cb] = (data) => {
+        cleanup();
+        resolve(data);
+      };
+      script.onerror = () => {
+        cleanup();
+        reject(new Error("ไม่สามารถโหลดสคริปต์ได้"));
+      };
+      const sep = url.includes("?") ? "&" : "?";
+      script.src = `${url}${sep}callback=${encodeURIComponent(cb)}`;
+      document.body.appendChild(script);
+    });
+  }
+
+  async function fetchDb(url) {
+    try {
+      const res = await fetch(url);
+      const json = JSON.parse(await res.text());
+      if (json && json.ok && Array.isArray(json.data)) return json.data;
+    } catch (_) {}
+    const jsonp = await fetchJsonp(url);
+    if (!jsonp || !jsonp.ok || !Array.isArray(jsonp.data)) {
+      throw new Error((jsonp && jsonp.error) || "รูปแบบข้อมูลไม่ถูกต้อง");
+    }
+    return jsonp.data;
+  }
+
+  async function initData() {
+    let pct = 15;
+    const iv = setInterval(() => {
+      pct = Math.min(90, pct + 12);
+      document.getElementById("loadingBar").style.width = pct + "%";
+      document.getElementById("loadingPct").textContent = pct + "%";
+    }, 200);
+
+    try {
+      const [chars, pendants] = await Promise.all([
+        fetchDb(CHAR_WEB_APP_URL),
+        fetchDb(PENDANT_WEB_APP_URL)
+      ]);
+      charDatabase = chars;
+      pendantDatabase = pendants;
+
+      clearInterval(iv);
+      document.getElementById("loadingBar").style.width = "100%";
+      document.getElementById("loadingPct").textContent = "100%";
+
+      setTimeout(() => {
+        document.getElementById("loadingBox").classList.add("is-hidden");
+        document.getElementById("partPicker").classList.remove("is-hidden");
+        initSelectOptions();
+        renderPickerPart();
+        renderSkillsPart();
+      }, 180);
+    } catch (err) {
+      clearInterval(iv);
+      document.getElementById("loadingBox").innerHTML =
+        `<div style="color:#fca5a5; font-weight:700;">เกิดข้อผิดพลาดในการโหลดข้อมูล: ${escapeHtml(err.message)}</div>`;
+    }
+  }
+
+  function initSelectOptions() {
+    const charSelect = document.getElementById("charSelect");
+    charSelect.innerHTML =
+      `<option value="">-- เลือกตัวละคร --</option>` +
+      charDatabase.map(c => `<option value="${escapeHtml(c.id)}">${escapeHtml(c.name)}</option>`).join("");
+
+    renderPendantSlots();
+  }
+
+  function getVariantData(item, vKey) {
+    if (!item || !item.variants || !item.variants[vKey]) return { image: "", skills: [] };
+    const v = item.variants[vKey];
+    return {
+      image: String(v.image || "").trim(),
+      skills: Array.isArray(v.skills) ? v.skills : []
+    };
+  }
+
+  function formatGrowth(growth) {
+    if (growth === null || growth === undefined || growth === "") return { text: "-", empty: true };
+    if (typeof growth === "number") {
+      if (isNaN(growth)) return { text: "-", empty: true };
+      if (Math.abs(growth) > 0 && Math.abs(growth) < 1) {
+        const pct = Math.round(growth * 10000) / 100;
+        return { text: `${pct > 0 ? "+" : ""}${pct}%`, empty: false };
+      }
+      return { text: `${growth > 0 ? "+" : ""}${growth}`, empty: false };
+    }
+    const str = String(growth).trim();
+    if (!str || str === "-") return { text: "-", empty: true };
+    if (/^[+-]?\d+(\.\d+)?$/.test(str)) {
+      const num = Number(str);
+      if (Math.abs(num) > 0 && Math.abs(num) < 1) {
+        const pct = Math.round(num * 10000) / 100;
+        return { text: `${pct > 0 ? "+" : ""}${pct}%`, empty: false };
+      }
+      return { text: `${num > 0 ? "+" : ""}${num}`, empty: false };
+    }
+    return { text: str, empty: false };
+  }
+
+  /* =========================================================
+     Render พาร์ตบน: ตัวละคร + คอสตูม + จี้ 4 ช่อง
+     ========================================================= */
+  function renderPickerPart() {
+    const charObj = charDatabase.find(c => c.id === state.character.id) || null;
+    const charSelect = document.getElementById("charSelect");
+    const clearCharBtn = document.getElementById("clearCharBtn");
+    const charThumb = document.getElementById("charThumb");
+    const tierGroup = document.getElementById("charTierGroup");
+    const costumeSelect = document.getElementById("costumeSelect");
+    const clearCostumeBtn = document.getElementById("clearCostumeBtn");
+
+    charSelect.value = state.character.id || "";
+    clearCharBtn.disabled = !state.character.id;
+
+    tierGroup.innerHTML = CHAR_TIERS.map(tKey => {
+      const hasData = charObj ? getVariantData(charObj, tKey).skills.length > 0 : false;
+      const isActive = state.character.tier === tKey;
+      return `
+        <button
+          type="button"
+          class="tier-btn ${isActive ? "active" : ""} ${charObj && !hasData ? "no-data" : ""}"
+          data-tier="${tKey}"
+          onclick="onCharTierClick('${tKey}')"
+        >${CHAR_TIER_LABELS[tKey]}</button>
+      `;
+    }).join("");
+
+    if (!charObj) {
+      charThumb.innerHTML = `<span class="empty-thumb">ตัวละคร</span>`;
+    } else {
+      const vData = getVariantData(charObj, state.character.tier);
+      charThumb.innerHTML = vData.image
+        ? `<img src="${escapeHtml(vData.image)}" alt="${escapeHtml(charObj.name)}" onerror="this.outerHTML='<span class=\\'empty-thumb\\'>ไม่มีรูป</span>'" />`
+        : `<span class="empty-thumb">ไม่มีรูป</span>`;
+    }
+
+    const costumes = charObj && Array.isArray(charObj.costumes) ? charObj.costumes : [];
+    const validCosIdx =
+      state.character.costumeIndex !== "" &&
+      Number(state.character.costumeIndex) >= 0 &&
+      Number(state.character.costumeIndex) < costumes.length
+        ? String(Number(state.character.costumeIndex))
+        : "";
+    state.character.costumeIndex = validCosIdx;
+
+    costumeSelect.disabled = !charObj || costumes.length === 0;
+    clearCostumeBtn.disabled = validCosIdx === "";
+    costumeSelect.innerHTML =
+      `<option value="">${!charObj ? "เลือกคอสตูม" : costumes.length === 0 ? "ไม่มีคอสตูม" : "ไม่เลือกคอสตูม"}</option>` +
+      costumes.map((cos, idx) =>
+        `<option value="${idx}" ${validCosIdx === String(idx) ? "selected" : ""}>${escapeHtml(cos.costumeName)}</option>`
+      ).join("");
+
+    renderPendantSlots();
+  }
+
+  function renderPendantSlots() {
+    const grid = document.getElementById("pendantsGrid");
+    const baseOptions =
+      `<option value="">-- เลือกจี้เครื่องราง --</option>` +
+      pendantDatabase.map(p => `<option value="${escapeHtml(p.id)}">${escapeHtml(p.name)}</option>`).join("");
+
+    grid.innerHTML = state.pendants.map((slot, idx) => {
+      const pObj = pendantDatabase.find(p => p.id === slot.id) || null;
+      const vData = pObj ? getVariantData(pObj, slot.variant) : { image: "", skills: [] };
+
+      const thumbHtml = pObj && vData.image
+        ? `<img src="${escapeHtml(vData.image)}" alt="${escapeHtml(pObj.name)}" onerror="this.outerHTML='<span class=\\'empty-thumb\\'>ไม่มีรูป</span>'" />`
+        : `<span class="empty-thumb">จี้ ${idx + 1}</span>`;
+
+      const varBtns = PENDANT_VARS.map(vKey => {
+        const hasData = pObj ? getVariantData(pObj, vKey).skills.length > 0 : false;
+        const isActive = slot.variant === vKey;
+        return `
+          <button
+            type="button"
+            class="pvar-btn ${isActive ? "active" : ""} ${pObj && !hasData ? "no-data" : ""}"
+            data-pvar="${vKey}"
+            onclick="onPendantVarClick(${idx}, '${vKey}')"
+          >${PENDANT_VAR_LABELS[vKey]}</button>
+        `;
+      }).join("");
+
+      const selectedOptHtml = baseOptions.replace(
+        `value="${escapeHtml(slot.id)}"`,
+        `value="${escapeHtml(slot.id)}" selected`
+      );
+
+      return `
+        <div class="pendant-slot-card">
+          <div class="pendant-thumb-frame">${thumbHtml}</div>
+          <div class="pendant-slot-body">
+            <div class="slot-badge-row">
+              <span class="slot-title">จี้เครื่องรางช่องที่ ${idx + 1}</span>
+              <div class="pendant-var-group">${varBtns}</div>
+            </div>
+
+            <div class="search-wrap" id="pSearchWrap_${idx}">
+              <input
+                id="pSearchInput_${idx}"
+                class="search-input"
+                type="text"
+                placeholder="พิมพ์ค้นหาชื่อจี้ หรือสกิล..."
+                autocomplete="off"
+                value="${pObj ? escapeHtml(pObj.name) : ""}"
+                oninput="renderPendantSuggestions(${idx})"
+                onfocus="renderPendantSuggestions(${idx})"
+                onkeydown="handleSearchEnter(event, 'p${idx}')"
+              />
+              <div id="pSuggestions_${idx}" class="suggestions-popup"></div>
+            </div>
+
+            <div class="picker-row">
+              <select class="dropdown-select" onchange="onPendantSelect(${idx}, this.value)">
+                ${selectedOptHtml}
+              </select>
+              <button
+                type="button"
+                class="clear-icon-btn"
+                title="ล้างจี้ช่องนี้"
+                onclick="clearPendant(${idx})"
+                ${!slot.id ? "disabled" : ""}
+              >✕</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }).join("");
+  }
+
+  /* =========================================================
+     Event Handlers ของพาร์ตบน
+     ========================================================= */
+  function onCharSelect(charId) {
+    state.character.id = charId;
+    state.character.costumeIndex = "";
+    const charObj = charDatabase.find(c => c.id === charId);
+    if (charObj) {
+      document.getElementById("charSearchInput").value = charObj.name;
+      if (getVariantData(charObj, state.character.tier).skills.length === 0) {
+        const firstValid = CHAR_TIERS.find(t => getVariantData(charObj, t).skills.length > 0);
+        if (firstValid) state.character.tier = firstValid;
+      }
+    } else {
+      document.getElementById("charSearchInput").value = "";
+    }
+    renderPickerPart();
+    renderSkillsPart();
+  }
+
+  function onCharTierClick(tKey) {
+    state.character.tier = tKey;
+    renderPickerPart();
+    renderSkillsPart();
+  }
+
+  function onCostumeSelect(idxStr) {
+    state.character.costumeIndex = idxStr;
+    renderPickerPart();
+    renderSkillsPart();
+  }
+
+  function clearChar() {
+    state.character = { id: "", tier: "evo", costumeIndex: "" };
+    document.getElementById("charSearchInput").value = "";
+    renderPickerPart();
+    renderSkillsPart();
+  }
+
+  function onPendantSelect(pIdx, pendantId) {
+    state.pendants[pIdx].id = pendantId;
+    const pObj = pendantDatabase.find(p => p.id === pendantId);
+    if (pObj && getVariantData(pObj, state.pendants[pIdx].variant).skills.length === 0) {
+      const firstValid = PENDANT_VARS.find(v => getVariantData(pObj, v).skills.length > 0);
+      if (firstValid) state.pendants[pIdx].variant = firstValid;
+    }
+    renderPickerPart();
+    renderSkillsPart();
+  }
+
+  function onPendantVarClick(pIdx, vKey) {
+    state.pendants[pIdx].variant = vKey;
+    renderPickerPart();
+    renderSkillsPart();
+  }
+
+  function clearPendant(pIdx) {
+    state.pendants[pIdx] = { id: "", variant: "normal" };
+    renderPickerPart();
+    renderSkillsPart();
+  }
+
+  function resetBuild() {
+    state.character = { id: "", tier: "evo", costumeIndex: "" };
+    state.pendants = [
+      { id: "", variant: "normal" },
+      { id: "", variant: "normal" },
+      { id: "", variant: "normal" },
+      { id: "", variant: "normal" }
+    ];
+    document.getElementById("charSearchInput").value = "";
+    renderPickerPart();
+    renderSkillsPart();
+  }
+
+  /* =========================================================
+     ค้นหาแบบ Autocomplete
+     ========================================================= */
+  function findCharMatches(q) {
+    return charDatabase
+      .map(c => {
+        const nameMatch = (c.name || "").toLowerCase().includes(q);
+        let matchedTier = null;
+        let preview = "";
+        let matchedCosIdx = "";
+
+        for (const tKey of CHAR_TIERS) {
+          const found = getVariantData(c, tKey).skills.find(s => (s.desc || "").toLowerCase().includes(q));
+          if (found) {
+            matchedTier = tKey;
+            preview = found.desc;
+            break;
+          }
+        }
+
+        if (!matchedTier && Array.isArray(c.costumes)) {
+          const cIdx = c.costumes.findIndex(cos =>
+            (cos.costumeName || "").toLowerCase().includes(q) ||
+            (cos.desc || "").toLowerCase().includes(q)
+          );
+          if (cIdx !== -1) {
+            matchedCosIdx = String(cIdx);
+            preview = `[คอสตูม ${c.costumes[cIdx].costumeName}] ${c.costumes[cIdx].desc}`;
+          }
+        }
+
+        if (!nameMatch && !matchedTier && matchedCosIdx === "") return null;
+        if (!matchedTier) {
+          matchedTier = CHAR_TIERS.find(t => getVariantData(c, t).skills.length > 0) || "evo";
+          if (!preview) {
+            const first = getVariantData(c, matchedTier).skills[0];
+            preview = first ? first.desc : "";
+          }
+        }
+
+        return {
+          id: c.id,
+          name: c.name,
+          tier: matchedTier,
+          costumeIndex: matchedCosIdx,
+          sub: `${CHAR_TIER_LABELS[matchedTier]} ${preview}`
+        };
+      })
+      .filter(Boolean);
+  }
+
+  function renderCharSuggestions() {
+    const input = document.getElementById("charSearchInput");
+    const box = document.getElementById("charSuggestions");
+    const q = input.value.trim().toLowerCase();
+    if (!q) {
+      box.classList.remove("show");
+      return;
+    }
+
+    const matches = findCharMatches(q);
+    if (matches.length === 0) {
+      box.innerHTML = `<div class="suggestion-row"><span class="suggestion-desc">ไม่พบตัวละครที่ตรงกับ "${escapeHtml(q)}"</span></div>`;
+      box.classList.add("show");
+      return;
+    }
+
+    box.innerHTML = matches.map(m => `
+      <div class="suggestion-row" onclick="applyCharSuggestion('${escapeJsAttr(m.id)}', '${escapeJsAttr(m.tier)}', '${escapeJsAttr(m.costumeIndex)}', '${escapeJsAttr(m.name)}')">
+        <span class="suggestion-title">${escapeHtml(m.name)}</span>
+        <span class="suggestion-desc">${escapeHtml(m.sub)}</span>
+      </div>
+    `).join("");
+    box.classList.add("show");
+  }
+
+  function applyCharSuggestion(id, tier, costumeIndex, name) {
+    state.character.id = id;
+    state.character.tier = tier || "evo";
+    state.character.costumeIndex = costumeIndex || "";
+    document.getElementById("charSearchInput").value = name;
+    document.getElementById("charSuggestions").classList.remove("show");
+    renderPickerPart();
+    renderSkillsPart();
+  }
+
+  function findPendantMatches(q) {
+    return pendantDatabase
+      .map(p => {
+        const nameMatch = (p.name || "").toLowerCase().includes(q);
+        let matchedVar = null;
+        let preview = "";
+
+        for (const vKey of PENDANT_VARS) {
+          const found = getVariantData(p, vKey).skills.find(s => (s.desc || "").toLowerCase().includes(q));
+          if (found) {
+            matchedVar = vKey;
+            preview = found.desc;
+            break;
+          }
+        }
+
+        if (!nameMatch && !matchedVar) return null;
+        if (!matchedVar) {
+          matchedVar = PENDANT_VARS.find(v => getVariantData(p, v).skills.length > 0) || "normal";
+          const first = getVariantData(p, matchedVar).skills[0];
+          preview = first ? first.desc : "";
+        }
+
+        return {
+          id: p.id,
+          name: p.name,
+          variant: matchedVar,
+          sub: `[${PENDANT_VAR_LABELS[matchedVar]}] ${preview}`
+        };
+      })
+      .filter(Boolean);
+  }
+
+  function renderPendantSuggestions(pIdx) {
+    const input = document.getElementById(`pSearchInput_${pIdx}`);
+    const box = document.getElementById(`pSuggestions_${pIdx}`);
+    if (!input || !box) return;
+
+    const q = input.value.trim().toLowerCase();
+    if (!q) {
+      box.classList.remove("show");
+      return;
+    }
+
+    const matches = findPendantMatches(q);
+    if (matches.length === 0) {
+      box.innerHTML = `<div class="suggestion-row"><span class="suggestion-desc">ไม่พบจี้ที่ตรงกับ "${escapeHtml(q)}"</span></div>`;
+      box.classList.add("show");
+      return;
+    }
+
+    box.innerHTML = matches.map(m => `
+      <div class="suggestion-row" onclick="applyPendantSuggestion(${pIdx}, '${escapeJsAttr(m.id)}', '${escapeJsAttr(m.variant)}')">
+        <span class="suggestion-title">${escapeHtml(m.name)}</span>
+        <span class="suggestion-desc">${escapeHtml(m.sub)}</span>
+      </div>
+    `).join("");
+    box.classList.add("show");
+  }
+
+  function applyPendantSuggestion(pIdx, id, variant) {
+    state.pendants[pIdx].id = id;
+    state.pendants[pIdx].variant = variant || "normal";
+    renderPickerPart();
+    renderSkillsPart();
+  }
+
+  function handleSearchEnter(event, target) {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      if (target === "char") {
+        const q = document.getElementById("charSearchInput").value.trim().toLowerCase();
+        const m = findCharMatches(q);
+        if (m.length > 0) applyCharSuggestion(m[0].id, m[0].tier, m[0].costumeIndex, m[0].name);
+      } else {
+        const pIdx = Number(target.replace("p", ""));
+        const q = document.getElementById(`pSearchInput_${pIdx}`).value.trim().toLowerCase();
+        const m = findPendantMatches(q);
+        if (m.length > 0) applyPendantSuggestion(pIdx, m[0].id, m[0].variant);
+      }
+    } else if (event.key === "Escape") {
+      document.querySelectorAll(".suggestions-popup").forEach(el => el.classList.remove("show"));
+    }
+  }
+
+  document.addEventListener("click", (e) => {
+    document.querySelectorAll(".search-wrap").forEach(wrap => {
+      if (!wrap.contains(e.target)) {
+        const popup = wrap.querySelector(".suggestions-popup");
+        if (popup) popup.classList.remove("show");
+      }
+    });
+  });
+
+  /* =========================================================
+     Render พาร์ตล่าง: ชิดกันต่อเนื่อง + รูปและชื่อในคอลัมน์แรก
+     ========================================================= */
+  function renderZoneRows(zoneTitle, itemName, costumeName, imageUrl, fallbackLabel, skills, rowCounterObj) {
+    if (!Array.isArray(skills) || skills.length === 0) return "";
+
+    const imgHtml = imageUrl
+      ? `<div class="group-thumb-box"><img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(itemName)}" onerror="this.outerHTML='<span class=\\'group-thumb-empty\\'>-</span>'" /></div>`
+      : `<div class="group-thumb-box"><span class="group-thumb-empty">${escapeHtml(fallbackLabel)}</span></div>`;
+
+    const costumeHtml = costumeName
+      ? `<span class="zone-caption-costume">คอส: ${escapeHtml(costumeName)}</span>`
+      : "";
+
+    const zoneCellHtml = `
+      <td class="col-zone-cell" rowspan="${skills.length}">
+        <div class="zone-badge-stack">
+          ${imgHtml}
+          <span class="zone-caption-title">${escapeHtml(zoneTitle)}</span>
+          <span class="zone-caption-name">${escapeHtml(itemName)}</span>
+          ${costumeHtml}
+        </div>
+      </td>
+    `;
+
+    return skills.map((sk, idx) => {
+      const pctRaw = String(sk.percent || "ไม่ระบุเปอร์เซ็นต์");
+      const isNoPct = pctRaw === "ไม่ระบุเปอร์เซ็นต์";
+      const growthInfo = formatGrowth(sk.growth);
+      const isAlt = (rowCounterObj.count++) % 2 === 1;
+
+      return `
+        <tr class="row-skill-item ${isAlt ? "alt-row" : ""}">
+          ${idx === 0 ? zoneCellHtml : ""}
+          <td class="skill-desc-cell">${escapeHtml(sk.desc)}</td>
+          <td class="col-percent-cell">
+            <span class="percent-chip ${isNoPct ? "empty" : ""}">${escapeHtml(pctRaw)}</span>
+          </td>
+          <td class="col-growth-cell">
+            <span class="growth-chip ${growthInfo.empty ? "empty" : ""}">${escapeHtml(growthInfo.text)}</span>
+          </td>
+        </tr>
+      `;
+    }).join("");
+  }
+
+  function renderSkillsPart() {
+    const partSkills = document.getElementById("partSkills");
+    const badge = document.getElementById("skillsCountBadge");
+    const wrap = document.getElementById("skillsTableWrap");
+
+    let allRowsHtml = "";
+    let totalCount = 0;
+    const rowCounter = { count: 0 };
+
+    // 1. ตัวละคร (รวมสกิลคอสตูมถ้าเลือก)
+    const charObj = charDatabase.find(c => c.id === state.character.id) || null;
+    if (charObj) {
+      const tKey = state.character.tier;
+      const vData = getVariantData(charObj, tKey);
+      const charSkills = [...vData.skills];
+
+      const costumes = Array.isArray(charObj.costumes) ? charObj.costumes : [];
+      let selectedCosName = "";
+      if (state.character.costumeIndex !== "" && costumes[Number(state.character.costumeIndex)]) {
+        const cos = costumes[Number(state.character.costumeIndex)];
+        selectedCosName = cos.costumeName;
+        charSkills.push({
+          desc: cos.desc,
+          percent: cos.percent,
+          growth: cos.growth
+        });
+      }
+
+      if (charSkills.length > 0) {
+        totalCount += charSkills.length;
+        allRowsHtml += renderZoneRows(
+          `ตัวละคร ${CHAR_TIER_LABELS[tKey]}`,
+          charObj.name,
+          selectedCosName,
+          vData.image,
+          "ตัวละคร",
+          charSkills,
+          rowCounter
+        );
+      }
+    }
+
+    // 2. จี้ 1 - 4 ชิดต่อเนื่อง
+    state.pendants.forEach((slot, pIdx) => {
+      const pObj = pendantDatabase.find(p => p.id === slot.id) || null;
+      if (!pObj) return;
+      const vData = getVariantData(pObj, slot.variant);
+      if (vData.skills.length === 0) return;
+
+      totalCount += vData.skills.length;
+      const varSuffix = slot.variant === "normal" ? "" : ` ${PENDANT_VAR_LABELS[slot.variant]}`;
+      allRowsHtml += renderZoneRows(
+        `จี้ ${pIdx + 1}${varSuffix}`,
+        pObj.name,
+        "",
+        vData.image,
+        `จี้ ${pIdx + 1}`,
+        vData.skills,
+        rowCounter
+      );
+    });
+
+    if (totalCount === 0) {
+      partSkills.classList.add("is-hidden");
+      wrap.innerHTML = "";
+      badge.textContent = "0 สกิล";
+      return;
+    }
+
+    partSkills.classList.remove("is-hidden");
+    badge.textContent = `${totalCount} สกิล`;
+
+    wrap.innerHTML = `
+      <table class="combined-skill-table">
+        <thead>
+          <tr>
+            <th class="col-zone-cell"></th>
+            <th class="col-desc-hdr">ความสามารถ</th>
+            <th class="col-percent-hdr col-percent-cell">%</th>
+            <th class="col-growth-hdr col-growth-cell">เติบโต</th>
+          </tr>
+        </thead>
+        <tbody>${allRowsHtml}</tbody>
+      </table>
+    `;
+  }
+
+  function escapeHtml(text) {
+    const div = document.createElement("div");
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  function escapeJsAttr(text) {
+    return String(text).replace(/\\/g, "\\\\").replace(/'/g, "\\'");
+  }
+
+  initData();
+</script>
+
+</body>
+</html>
