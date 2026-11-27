@@ -6,26 +6,31 @@
   <title>ข้อมูลจี้เครื่องราง V.2</title>
   <style>
     :root {
-      --primary: #2563eb;
-      --primary-hover: #1d4ed8;
-      --primary-soft: #eff6ff;
-      --primary-border: #bfdbfe;
-      --bg: #f1f5f9;
-      --surface: #f8fafc;
-      --card: #ffffff;
-      --text: #0f172a;
-      --text-secondary: #334155;
-      --muted: #64748b;
-      --border: #e2e8f0;
-      --border-strong: #cbd5e1;
-      --growth-bg: #fef3c7;
-      --growth-text: #92400e;
-      --dark-theme: #334155;
-      --white-theme: #0284c7;
-      --success: #16a34a;
-      --danger-bg: #fef2f2;
-      --danger-border: #fecaca;
-      --danger-text: #dc2626;
+      --primary: #34546c;
+      --primary-hover: #284256;
+      --bg: #2c4a5e;
+      --card: #48a9bd;
+      --card-soft: #54b4c7;
+      --card-header: #3897ab;
+      --panel-dark: #34546c;
+      --panel-darker: #284256;
+      --text: #ffffff;
+      --text-dark: #0f172a;
+      --muted: #dbeafe;
+      --border: rgba(255, 255, 255, 0.28);
+      --accent: #3897ab;
+      --growth-bg: #284256;
+      --growth-text: #fef08a;
+      --highlight: #fde047;
+      --match-bg: rgba(20, 83, 45, 0.52);
+      --match-border: rgba(134, 239, 172, 0.55);
+      --match-text: #bbf7d0;
+      --diff-header-bg: #284256;
+      --dark-theme: #284256;
+      --white-theme: #0369a1;
+      --danger-bg: rgba(153, 27, 27, 0.45);
+      --danger-border: rgba(252, 165, 165, 0.55);
+      --danger-text: #fecaca;
     }
 
     * {
@@ -34,42 +39,85 @@
     }
 
     body {
-      background: linear-gradient(180deg, #eef4ff 0%, var(--bg) 180px);
+      background-color: var(--bg);
       color: var(--text);
       margin: 0;
-      padding: 24px;
+      padding: 20px;
       min-height: 100vh;
     }
 
     .container {
-      max-width: 960px;
+      max-width: 1120px;
       margin: 0 auto;
     }
 
     .page-header {
-      margin-bottom: 18px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .page-header-text {
+      min-width: 0;
+      flex: 1;
     }
 
     h1 {
-      font-size: 1.6rem;
+      font-size: 1.5rem;
       font-weight: 700;
-      color: var(--text);
-      margin: 0 0 6px 0;
-      letter-spacing: -0.01em;
+      color: #ffffff;
+      margin: 0 0 4px 0;
     }
 
     p.subtitle {
       color: var(--muted);
-      font-size: 0.96rem;
+      font-size: 0.94rem;
       margin: 0;
+    }
+
+    .compare-toggle-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 9px 14px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--highlight);
+      background-color: var(--panel-darker);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      cursor: pointer;
+      white-space: nowrap;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.22);
+      transition: 0.15s;
+      flex-shrink: 0;
+    }
+
+    .compare-toggle-btn:hover {
+      background-color: var(--panel-dark);
+      border-color: var(--highlight);
+      color: #ffffff;
+    }
+
+    .compare-toggle-btn.is-open {
+      background-color: #991b1b;
+      border-color: rgba(252, 165, 165, 0.65);
+      color: #ffffff;
+    }
+
+    .compare-toggle-btn.is-open:hover {
+      background-color: #7f1d1d;
     }
 
     .card {
       background: var(--card);
       border: 1px solid var(--border);
       border-radius: 14px;
-      padding: 20px;
-      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.05);
+      padding: 18px;
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.22);
     }
 
     .is-hidden {
@@ -78,10 +126,10 @@
 
     /* แถบ Loading แบบไฟเต็มหลอด */
     .loading-panel {
-      padding: 18px 16px;
+      padding: 18px;
       border-radius: 12px;
-      background-color: var(--surface);
-      border: 1px solid var(--primary-border);
+      background-color: var(--panel-dark);
+      border: 1px solid var(--border);
       transition: opacity 0.25s ease, transform 0.25s ease;
     }
 
@@ -99,11 +147,11 @@
       margin-bottom: 10px;
       font-size: 0.94rem;
       font-weight: 700;
-      color: var(--text-secondary);
+      color: #ffffff;
     }
 
     .loading-percent {
-      color: var(--primary);
+      color: var(--highlight);
       font-weight: 700;
       font-variant-numeric: tabular-nums;
     }
@@ -111,11 +159,10 @@
     .loading-track {
       position: relative;
       width: 100%;
-      height: 14px;
+      height: 12px;
       border-radius: 999px;
-      background-color: #dbeafe;
+      background-color: var(--panel-darker);
       overflow: hidden;
-      box-shadow: inset 0 1px 3px rgba(37, 99, 235, 0.14);
     }
 
     .loading-fill {
@@ -123,9 +170,8 @@
       width: 0%;
       height: 100%;
       border-radius: 999px;
-      background: linear-gradient(90deg, #2563eb 0%, #3b82f6 55%, #38bdf8 100%);
-      box-shadow: 0 0 12px rgba(37, 99, 235, 0.5);
-      transition: width 0.22s ease-out, box-shadow 0.25s ease;
+      background: linear-gradient(90deg, #54b4c7, #fde047);
+      transition: width 0.22s ease-out;
     }
 
     .loading-fill::after {
@@ -138,15 +184,14 @@
       background: linear-gradient(
         90deg,
         rgba(255, 255, 255, 0) 0%,
-        rgba(255, 255, 255, 0.45) 50%,
+        rgba(255, 255, 255, 0.35) 50%,
         rgba(255, 255, 255, 0) 100%
       );
       animation: shimmerSweep 1.15s infinite;
     }
 
     .loading-fill.full {
-      background: linear-gradient(90deg, #15803d 0%, #16a34a 60%, #4ade80 100%);
-      box-shadow: 0 0 16px rgba(22, 163, 74, 0.65);
+      background: linear-gradient(90deg, #3897ab, #fde047);
     }
 
     @keyframes shimmerSweep {
@@ -172,45 +217,47 @@
     .search-input {
       flex: 1;
       min-width: 0;
-      padding: 11px 14px;
-      font-size: 0.96rem;
-      border: 1px solid var(--border-strong);
-      border-radius: 10px;
-      background-color: var(--surface);
-      color: var(--text);
+      padding: 10px 12px;
+      font-size: 0.94rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background-color: var(--panel-darker);
+      color: #ffffff;
       outline: none;
-      transition: 0.15s;
+    }
+
+    .search-input::placeholder {
+      color: rgba(255, 255, 255, 0.65);
     }
 
     .search-input:focus {
-      background-color: var(--card);
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.14);
+      border-color: var(--highlight);
+      box-shadow: 0 0 0 3px rgba(253, 224, 71, 0.2);
     }
 
     .search-btn {
-      padding: 11px 16px;
-      font-size: 0.94rem;
-      font-weight: 600;
-      border: none;
-      border-radius: 10px;
-      background-color: var(--primary);
-      color: #fff;
+      padding: 10px 16px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background-color: var(--panel-darker);
+      color: var(--highlight);
       cursor: pointer;
       white-space: nowrap;
       transition: 0.15s;
       flex-shrink: 0;
-      box-shadow: 0 2px 6px rgba(37, 99, 235, 0.22);
     }
 
     .search-btn:hover:not(:disabled) {
-      background-color: var(--primary-hover);
+      background-color: var(--panel-dark);
+      border-color: var(--highlight);
+      color: #ffffff;
     }
 
     .search-btn:disabled {
       opacity: 0.45;
       cursor: not-allowed;
-      box-shadow: none;
     }
 
     .suggestions-box {
@@ -218,10 +265,10 @@
       top: calc(100% + 4px);
       left: 0;
       right: 0;
-      background: var(--card);
-      border: 1px solid var(--border-strong);
-      border-radius: 10px;
-      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.12);
+      background: var(--panel-darker);
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      border-radius: 8px;
+      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.45);
       z-index: 30;
       max-height: 260px;
       overflow-y: auto;
@@ -235,7 +282,7 @@
     .suggestion-item {
       padding: 10px 14px;
       cursor: pointer;
-      border-bottom: 1px solid var(--border);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
       display: flex;
       flex-direction: column;
       gap: 3px;
@@ -246,18 +293,18 @@
     }
 
     .suggestion-item:hover {
-      background-color: var(--primary-soft);
+      background-color: var(--panel-dark);
     }
 
     .suggestion-name {
-      font-weight: 600;
-      font-size: 0.94rem;
-      color: var(--text);
+      font-weight: 700;
+      font-size: 0.92rem;
+      color: var(--highlight);
     }
 
     .suggestion-sub {
       font-size: 0.78rem;
-      color: var(--muted);
+      color: #e2e8f0;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -278,31 +325,24 @@
     select {
       flex: 1;
       min-width: 0;
-      padding: 11px 14px;
-      font-size: 0.98rem;
-      border: 1px solid var(--border-strong);
-      border-radius: 10px;
-      background-color: var(--surface);
-      color: var(--text);
+      padding: 10px 12px;
+      font-size: 0.94rem;
+      font-weight: 700;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+      border-radius: 8px;
+      background-color: #f1f5f9;
+      color: var(--text-dark);
       cursor: pointer;
-      outline: none;
-      transition: 0.15s;
-    }
-
-    select:focus {
-      background-color: var(--card);
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.14);
     }
 
     .clear-btn {
-      width: 44px;
-      height: 44px;
-      border: 1px solid var(--border-strong);
-      border-radius: 10px;
-      background-color: var(--surface);
-      color: var(--text-secondary);
-      font-size: 1.05rem;
+      width: 42px;
+      height: 42px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background-color: var(--panel-darker);
+      color: #fca5a5;
+      font-size: 1rem;
       font-weight: 700;
       cursor: pointer;
       display: inline-flex;
@@ -313,15 +353,14 @@
     }
 
     .clear-btn:hover:not(:disabled) {
-      background-color: #fee2e2;
-      border-color: #fca5a5;
-      color: var(--danger-text);
+      background-color: #991b1b;
+      color: #ffffff;
     }
 
     .clear-btn:disabled {
-      opacity: 0.4;
+      opacity: 0.35;
       cursor: not-allowed;
-      background-color: var(--surface);
+      background-color: var(--panel-dark);
     }
 
     .pendant-header-bar {
@@ -330,9 +369,11 @@
       align-items: center;
       justify-content: space-between;
       gap: 12px;
-      margin-top: 18px;
-      padding-top: 16px;
-      border-top: 1px solid var(--border);
+      margin-top: 16px;
+      padding: 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background-color: var(--card-soft);
     }
 
     .pendant-showcase {
@@ -342,11 +383,11 @@
     }
 
     .image-frame {
-      width: 84px;
-      height: 84px;
+      width: 82px;
+      height: 82px;
       border-radius: 12px;
-      border: 1px solid var(--primary-border);
-      background-color: var(--primary-soft);
+      border: 1px solid var(--border);
+      background-color: var(--panel-dark);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -363,7 +404,8 @@
     }
 
     .image-placeholder {
-      font-size: 0.72rem;
+      font-size: 0.74rem;
+      font-weight: 600;
       color: var(--muted);
       text-align: center;
       line-height: 1.25;
@@ -374,65 +416,57 @@
       display: inline-flex;
       align-items: center;
       padding: 10px 16px;
-      background-color: var(--primary-soft);
-      border: 1px solid var(--primary-border);
+      background-color: var(--panel-dark);
+      border: 1px solid var(--border);
       border-radius: 10px;
     }
 
     .pendant-title {
-      font-size: 1.08rem;
+      font-size: 1.06rem;
       font-weight: 700;
-      color: var(--primary);
+      color: #ffffff;
       margin: 0;
       line-height: 1.35;
     }
 
     .variant-tabs {
       display: inline-flex;
-      gap: 8px;
+      gap: 6px;
       flex-wrap: wrap;
-      background: var(--surface);
-      padding: 4px;
-      border-radius: 10px;
-      border: 1px solid var(--border);
     }
 
     .variant-btn {
-      padding: 7px 14px;
-      font-size: 0.88rem;
-      font-weight: 600;
-      border-radius: 8px;
-      border: 1px solid transparent;
-      background-color: transparent;
-      color: var(--text-secondary);
+      padding: 7px 13px;
+      font-size: 0.86rem;
+      font-weight: 700;
+      border-radius: 7px;
+      border: 1px solid var(--border);
+      background-color: var(--panel-dark);
+      color: #ffffff;
       cursor: pointer;
       transition: 0.15s;
     }
 
     .variant-btn:hover:not(:disabled) {
-      background-color: var(--card);
-      border-color: var(--border);
+      background-color: var(--panel-darker);
     }
 
     .variant-btn.active[data-variant="normal"] {
-      background-color: var(--primary);
-      border-color: var(--primary);
-      color: #fff;
-      box-shadow: 0 2px 6px rgba(37, 99, 235, 0.22);
+      background-color: var(--panel-darker);
+      border-color: var(--highlight);
+      color: var(--highlight);
     }
 
     .variant-btn.active[data-variant="dark"] {
       background-color: var(--dark-theme);
-      border-color: var(--dark-theme);
-      color: #fff;
-      box-shadow: 0 2px 6px rgba(51, 65, 85, 0.22);
+      border-color: #cbd5e1;
+      color: #ffffff;
     }
 
     .variant-btn.active[data-variant="white"] {
       background-color: var(--white-theme);
-      border-color: var(--white-theme);
-      color: #fff;
-      box-shadow: 0 2px 6px rgba(2, 132, 199, 0.22);
+      border-color: #bae6fd;
+      color: #ffffff;
     }
 
     .variant-btn.no-data {
@@ -443,101 +477,93 @@
       margin-top: 14px;
       padding: 18px;
       border-radius: 10px;
-      background-color: var(--surface);
-      border: 1px dashed var(--border-strong);
+      background-color: var(--panel-dark);
+      border: 1px dashed var(--border);
       color: var(--muted);
       text-align: center;
       font-size: 0.92rem;
     }
 
-    .table-wrap {
-      margin-top: 14px;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      overflow: hidden;
-      background: var(--card);
-    }
-
-    table {
+    .detail-table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 0;
+      margin-top: 14px;
     }
 
-    th, td {
+    .detail-table th,
+    .detail-table td {
       text-align: left;
-      padding: 12px;
-      border-bottom: 1px solid var(--border);
-      line-height: 1.5;
-      font-size: 0.94rem;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      line-height: 1.45;
+      font-size: 0.92rem;
+      color: #ffffff;
     }
 
-    tbody tr:last-child td {
-      border-bottom: none;
-    }
-
-    tbody tr:hover td {
-      background-color: #fafcff;
-    }
-
-    th {
-      background-color: var(--primary-soft);
-      color: var(--primary);
+    .detail-table th {
+      background-color: var(--panel-dark);
+      color: #ffffff;
       font-weight: 700;
-      border-bottom: 1px solid var(--primary-border);
+      font-size: 0.88rem;
+    }
+
+    .detail-table tbody tr td {
+      background-color: var(--card-soft);
+    }
+
+    .detail-table tbody tr:nth-child(even) td {
+      background-color: var(--card-header);
     }
 
     .col-slot {
       width: 56px;
       text-align: center;
-      color: var(--muted);
-      font-weight: 600;
+      font-weight: 700;
     }
 
     .col-percent {
-      width: 135px;
+      width: 130px;
       text-align: center;
     }
 
     .col-growth {
-      width: 125px;
+      width: 120px;
       text-align: center;
     }
 
     .percent-badge {
       display: inline-block;
-      background-color: #dbeafe;
-      color: #1e40af;
-      border: 1px solid #bfdbfe;
+      background-color: var(--panel-dark);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: #ffffff;
       font-weight: 700;
-      padding: 4px 10px;
+      padding: 3px 9px;
       border-radius: 999px;
-      font-size: 0.86rem;
+      font-size: 0.82rem;
       white-space: nowrap;
     }
 
     .percent-none {
-      background-color: var(--surface);
-      color: var(--muted);
-      border-color: var(--border);
+      background-color: rgba(40, 66, 86, 0.55);
+      color: #cbd5e1;
     }
 
     .growth-badge {
       display: inline-block;
       background-color: var(--growth-bg);
+      border: 1px solid rgba(254, 240, 138, 0.45);
       color: var(--growth-text);
-      border: 1px solid #fde68a;
       font-weight: 700;
-      padding: 4px 10px;
+      padding: 3px 9px;
       border-radius: 999px;
-      font-size: 0.84rem;
+      font-size: 0.82rem;
       white-space: nowrap;
     }
 
     .growth-empty {
-      background-color: var(--surface);
-      color: var(--muted);
-      border-color: var(--border);
+      background-color: rgba(40, 66, 86, 0.55);
+      border-color: transparent;
+      color: #cbd5e1;
     }
 
     .error-box {
@@ -547,8 +573,227 @@
       padding: 14px;
       border-radius: 10px;
       margin-top: 14px;
-      font-size: 0.94rem;
+      font-size: 0.92rem;
+      font-weight: 600;
       line-height: 1.6;
+    }
+
+    /* =========================================================
+       ส่วนหน้าเปรียบเทียบจี้เครื่องราง (เปิด-ปิดด้วยปุ่มด้านบน)
+       ========================================================= */
+    .compare-section {
+      margin-top: 20px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px;
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.22);
+    }
+
+    .compare-section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+
+    .compare-section-title {
+      margin: 0;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .compare-badge {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--highlight);
+      background-color: var(--panel-dark);
+      border: 1px solid var(--border);
+      padding: 4px 12px;
+      border-radius: 999px;
+    }
+
+    .controls-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .control-card {
+      background: var(--card-soft);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+    }
+
+    .slot-label {
+      display: inline-block;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--highlight);
+      background-color: var(--panel-dark);
+      border: 1px solid var(--border);
+      padding: 3px 10px;
+      border-radius: 999px;
+      margin-bottom: 10px;
+    }
+
+    .table-card {
+      background: var(--card-soft);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow-x: auto;
+    }
+
+    .compare-table {
+      width: 100%;
+      min-width: 780px;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+
+    .compare-table th,
+    .compare-table td {
+      padding: 9px 10px;
+      border: 1px solid var(--border);
+      vertical-align: middle;
+      line-height: 1.45;
+      font-size: 0.88rem;
+      color: #ffffff;
+      word-wrap: break-word;
+    }
+
+    .compare-table th.pendant-head {
+      background-color: var(--panel-dark);
+      color: #ffffff;
+      font-size: 0.96rem;
+      font-weight: 700;
+      text-align: center;
+      padding: 12px 10px;
+    }
+
+    .compare-table th.pendant-head.slot-1 {
+      border-right: 2px solid rgba(255, 255, 255, 0.45);
+    }
+
+    .head-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .head-title {
+      line-height: 1.35;
+      color: var(--highlight);
+    }
+
+    .head-thumb {
+      width: 64px;
+      height: 64px;
+      object-fit: contain;
+      border-radius: 10px;
+      background: var(--panel-darker);
+      border: 1px solid var(--border);
+      padding: 4px;
+      flex-shrink: 0;
+    }
+
+    .head-thumb-placeholder {
+      width: 64px;
+      height: 64px;
+      border-radius: 10px;
+      background: var(--panel-darker);
+      border: 1px dashed var(--border);
+      color: var(--muted);
+      font-size: 0.72rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .compare-table th.sub-col-head {
+      background-color: var(--panel-darker);
+      color: #ffffff;
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-align: center;
+      padding: 8px 6px;
+    }
+
+    .compare-table th.sub-col-head.col-skill {
+      text-align: left;
+      padding-left: 10px;
+    }
+
+    .compare-table th.sub-col-head.slot-1-end,
+    .compare-table td.slot-1-end {
+      border-right: 2px solid rgba(255, 255, 255, 0.45);
+    }
+
+    .compare-table td.col-skill {
+      text-align: left;
+      background-color: var(--card-soft);
+    }
+
+    .compare-table td.col-percent,
+    .compare-table td.col-growth {
+      text-align: center;
+      background-color: var(--card-soft);
+    }
+
+    .compare-table tr.matched-row td {
+      background-color: var(--match-bg);
+    }
+
+    .compare-table tr.diff-section-row td {
+      background-color: var(--diff-header-bg);
+      color: var(--highlight);
+      font-weight: 700;
+      text-align: center;
+      font-size: 0.88rem;
+      padding: 8px;
+    }
+
+    .skill-slot-tag {
+      color: var(--muted);
+      font-weight: 600;
+      margin-right: 4px;
+      font-size: 0.85em;
+    }
+
+    .matched-row .percent-badge {
+      background-color: rgba(22, 101, 52, 0.75);
+      color: var(--match-text);
+      border: 1px solid var(--match-border);
+    }
+
+    .empty-cell-dash {
+      color: rgba(255, 255, 255, 0.45);
+      text-align: center;
+      display: block;
+      font-size: 0.88rem;
+    }
+
+    .empty-state {
+      text-align: center;
+      color: var(--muted);
+      padding: 28px 16px;
+      font-size: 0.92rem;
+      font-weight: 600;
+    }
+
+    @media (max-width: 820px) {
+      .controls-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
     }
 
     @media (max-width: 600px) {
@@ -556,17 +801,32 @@
         padding: 12px;
       }
 
+      .page-header {
+        gap: 8px;
+        margin-bottom: 12px;
+      }
+
       h1 {
         font-size: 1.25rem;
       }
 
       p.subtitle {
-        font-size: 0.85rem;
+        font-size: 0.84rem;
       }
 
-      .card {
-        padding: 14px;
+      .compare-toggle-btn {
+        padding: 7px 11px;
+        font-size: 0.78rem;
+      }
+
+      .card,
+      .compare-section {
+        padding: 12px;
         border-radius: 12px;
+      }
+
+      .compare-section-title {
+        font-size: 1.02rem;
       }
 
       .loading-panel {
@@ -592,13 +852,11 @@
       .search-input {
         padding: 9px 10px;
         font-size: 0.86rem;
-        border-radius: 8px;
       }
 
       .search-btn {
         padding: 9px 12px;
         font-size: 0.82rem;
-        border-radius: 8px;
       }
 
       .suggestion-name {
@@ -618,22 +876,20 @@
       }
 
       select {
-        padding: 10px 10px;
+        padding: 9px 10px;
         font-size: 0.88rem;
-        border-radius: 8px;
       }
 
       .clear-btn {
-        width: 40px;
-        height: 40px;
-        font-size: 0.95rem;
-        border-radius: 8px;
+        width: 38px;
+        height: 38px;
+        font-size: 0.92rem;
       }
 
       .pendant-header-bar {
         gap: 8px;
         margin-top: 14px;
-        padding-top: 12px;
+        padding: 10px;
       }
 
       .pendant-showcase {
@@ -664,12 +920,12 @@
         font-size: 0.78rem;
       }
 
-      .table-wrap {
+      .detail-table {
         margin-top: 12px;
-        border-radius: 10px;
       }
 
-      th, td {
+      .detail-table th,
+      .detail-table td {
         padding: 8px 6px;
         font-size: 0.76rem;
         line-height: 1.42;
@@ -690,6 +946,34 @@
         font-size: 0.7rem;
       }
 
+      .compare-table {
+        min-width: 680px;
+      }
+
+      .compare-table th,
+      .compare-table td {
+        padding: 7px 5px;
+        font-size: 0.74rem;
+        line-height: 1.4;
+      }
+
+      .compare-table th.pendant-head {
+        font-size: 0.82rem;
+        padding: 10px 6px;
+      }
+
+      .head-thumb,
+      .head-thumb-placeholder {
+        width: 48px;
+        height: 48px;
+        border-radius: 8px;
+      }
+
+      .empty-state {
+        padding: 22px 10px;
+        font-size: 0.82rem;
+      }
+
       .error-box {
         padding: 10px;
         font-size: 0.82rem;
@@ -701,15 +985,23 @@
 
 <div class="container">
   <div class="page-header">
-    <h1>ข้อมูลจี้เครื่องราง V.2</h1>
-    <p class="subtitle">ค้นหาหรือเลือกจี้เครื่องราง แล้วสลับดูแบบ Normal, [ดาร์ค] และ [ไวท์]</p>
+    <div class="page-header-text">
+      <h1>ข้อมูลจี้เครื่องราง V.2</h1>
+      <p class="subtitle">ค้นหาหรือเลือกจี้เครื่องราง แล้วสลับดูแบบ Normal, [ดาร์ค] และ [ไวท์]</p>
+    </div>
+    <button
+      id="toggleCompareBtn"
+      type="button"
+      class="compare-toggle-btn is-hidden"
+      onclick="toggleCompareSection()"
+    >เปรียบเทียบจี้</button>
   </div>
 
   <div class="card">
     <div id="loadingArea"></div>
 
     <div id="mainControls" class="is-hidden">
-      <div class="search-wrapper" id="searchWrapper">
+      <div class="search-wrapper" id="mainSearchWrapper">
         <div class="search-row">
           <input
             id="pendantSearchInput"
@@ -717,18 +1009,18 @@
             type="text"
             placeholder="พิมพ์ชื่อจี้เครื่องราง หรือคำในความสามารถ..."
             autocomplete="off"
-            oninput="renderSuggestions()"
-            onfocus="renderSuggestions()"
-            onkeydown="handleSearchKeydown(event)"
+            oninput="renderMainSuggestions()"
+            onfocus="renderMainSuggestions()"
+            onkeydown="handleMainSearchKeydown(event)"
           />
           <button
             id="searchBtn"
             class="search-btn"
             type="button"
-            onclick="triggerSearch()"
+            onclick="triggerMainSearch()"
           >Search</button>
         </div>
-        <div id="suggestionsBox" class="suggestions-box"></div>
+        <div id="mainSuggestionsBox" class="suggestions-box"></div>
       </div>
 
       <div class="select-row">
@@ -747,6 +1039,100 @@
 
     <div id="pendantDetails"></div>
   </div>
+
+  <!-- หน้าเปรียบเทียบจี้เครื่องราง (ซ่อนอยู่จนกว่าจะกดปุ่ม "เปรียบเทียบจี้") -->
+  <section id="compareSection" class="compare-section is-hidden" aria-label="เปรียบเทียบจี้เครื่องราง">
+    <div class="compare-section-header">
+      <h2 class="compare-section-title">เปรียบเทียบจี้เครื่องราง V.2</h2>
+      <span class="compare-badge">โหมดเปรียบเทียบ 2 ชิ้น</span>
+    </div>
+
+    <div class="controls-grid">
+      <!-- จี้เครื่องรางชิ้นที่ 1 -->
+      <div class="control-card">
+        <div class="slot-label">จี้เครื่องรางชิ้นที่ 1</div>
+
+        <div class="search-wrapper" data-slot="1">
+          <div class="search-row">
+            <input
+              id="searchInput1"
+              class="search-input"
+              type="text"
+              placeholder="พิมพ์ชื่อจี้ หรือคำในความสามารถ..."
+              autocomplete="off"
+              oninput="renderCompareSuggestions(1)"
+              onfocus="renderCompareSuggestions(1)"
+              onkeydown="handleCompareSearchKeydown(event, 1)"
+            />
+            <button
+              id="searchBtn1"
+              class="search-btn"
+              type="button"
+              onclick="triggerCompareSearch(1)"
+            >Search</button>
+          </div>
+          <div id="suggestionsBox1" class="suggestions-box"></div>
+        </div>
+
+        <div class="select-row">
+          <select id="pendantSelect1" onchange="onCompareSelectChange(1)"></select>
+          <button
+            id="clearBtn1"
+            class="clear-btn"
+            type="button"
+            title="ล้างค่าจี้ชิ้นที่ 1"
+            aria-label="ล้างค่าจี้ชิ้นที่ 1"
+            onclick="clearCompareSlot(1)"
+            disabled
+          >✕</button>
+        </div>
+      </div>
+
+      <!-- จี้เครื่องรางชิ้นที่ 2 -->
+      <div class="control-card">
+        <div class="slot-label">จี้เครื่องรางชิ้นที่ 2</div>
+
+        <div class="search-wrapper" data-slot="2">
+          <div class="search-row">
+            <input
+              id="searchInput2"
+              class="search-input"
+              type="text"
+              placeholder="พิมพ์ชื่อจี้ หรือคำในความสามารถ..."
+              autocomplete="off"
+              oninput="renderCompareSuggestions(2)"
+              onfocus="renderCompareSuggestions(2)"
+              onkeydown="handleCompareSearchKeydown(event, 2)"
+            />
+            <button
+              id="searchBtn2"
+              class="search-btn"
+              type="button"
+              onclick="triggerCompareSearch(2)"
+            >Search</button>
+          </div>
+          <div id="suggestionsBox2" class="suggestions-box"></div>
+        </div>
+
+        <div class="select-row">
+          <select id="pendantSelect2" onchange="onCompareSelectChange(2)"></select>
+          <button
+            id="clearBtn2"
+            class="clear-btn"
+            type="button"
+            title="ล้างค่าจี้ชิ้นที่ 2"
+            aria-label="ล้างค่าจี้ชิ้นที่ 2"
+            onclick="clearCompareSlot(2)"
+            disabled
+          >✕</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-card" id="comparisonTableContainer">
+      <div class="empty-state">กรุณาเลือกจี้เครื่องรางอย่างน้อย 1 ชิ้นเพื่อดูข้อมูล</div>
+    </div>
+  </section>
 </div>
 
 <script>
@@ -760,16 +1146,56 @@
 
   let pendantDatabase = [];
   let activeVariant = "normal";
+  let isCompareOpen = false;
+  const activeCompareVariants = {
+    1: "normal",
+    2: "normal"
+  };
+
   let loadingTimer = null;
   let currentProgress = 0;
 
   function setMainControlsVisible(visible) {
     const mainControls = document.getElementById("mainControls");
-    if (!mainControls) return;
-    if (visible) {
-      mainControls.classList.remove("is-hidden");
+    const toggleBtn = document.getElementById("toggleCompareBtn");
+    if (mainControls) {
+      if (visible) {
+        mainControls.classList.remove("is-hidden");
+      } else {
+        mainControls.classList.add("is-hidden");
+      }
+    }
+    if (toggleBtn) {
+      if (visible) {
+        toggleBtn.classList.remove("is-hidden");
+      } else {
+        toggleBtn.classList.add("is-hidden");
+      }
+    }
+  }
+
+  function updateCompareToggleButton() {
+    const btn = document.getElementById("toggleCompareBtn");
+    const section = document.getElementById("compareSection");
+    if (!btn || !section) return;
+
+    if (isCompareOpen) {
+      section.classList.remove("is-hidden");
+      btn.classList.add("is-open");
+      btn.textContent = "ปิดการเปรียบเทียบ";
     } else {
-      mainControls.classList.add("is-hidden");
+      section.classList.add("is-hidden");
+      btn.classList.remove("is-open");
+      btn.textContent = "เปรียบเทียบจี้";
+    }
+  }
+
+  function toggleCompareSection() {
+    isCompareOpen = !isCompareOpen;
+    updateCompareToggleButton();
+    if (isCompareOpen) {
+      renderComparisonTable();
+      document.getElementById("compareSection").scrollIntoView({ behavior: "smooth", block: "start" });
     }
   }
 
@@ -779,6 +1205,8 @@
     stopLoadingBar();
     currentProgress = 12;
     setMainControlsVisible(false);
+    isCompareOpen = false;
+    updateCompareToggleButton();
     detailsArea.innerHTML = "";
 
     loadingArea.innerHTML = `
@@ -869,6 +1297,10 @@
     imgEl.outerHTML = `<span class="image-placeholder">ไม่มีรูป</span>`;
   }
 
+  function handleHeadImgError(imgEl) {
+    imgEl.outerHTML = `<span class="head-thumb-placeholder">ไม่มีรูป</span>`;
+  }
+
   function formatGrowthValue(growth) {
     if (growth === null || growth === undefined) {
       return { text: "-", isEmpty: true };
@@ -900,9 +1332,21 @@
     return { text: str, isEmpty: false };
   }
 
-  function hideSuggestions() {
-    const box = document.getElementById("suggestionsBox");
-    box.classList.remove("show");
+  function normalizeSkillText(text) {
+    return String(text || "")
+      .replace(/\s+/g, " ")
+      .trim()
+      .toLowerCase();
+  }
+
+  function hideMainSuggestions() {
+    const box = document.getElementById("mainSuggestionsBox");
+    if (box) box.classList.remove("show");
+  }
+
+  function hideCompareSuggestions(slot) {
+    const box = document.getElementById(`suggestionsBox${slot}`);
+    if (box) box.classList.remove("show");
   }
 
   function findMatchingPendants(keyword) {
@@ -951,18 +1395,18 @@
       .filter(Boolean);
   }
 
-  function renderSuggestions() {
+  function renderMainSuggestions() {
     const input = document.getElementById("pendantSearchInput");
-    const box = document.getElementById("suggestionsBox");
+    const box = document.getElementById("mainSuggestionsBox");
 
     if (pendantDatabase.length === 0) {
-      hideSuggestions();
+      hideMainSuggestions();
       return;
     }
 
     const q = input.value.trim();
     if (!q) {
-      hideSuggestions();
+      hideMainSuggestions();
       return;
     }
 
@@ -979,7 +1423,7 @@
         const vLabel = VARIANT_LABELS[m.suggestedVariant] || "Normal";
         const subText = m.previewText ? `[${vLabel}] ${m.previewText}` : `โหมด ${vLabel}`;
         return `
-          <div class="suggestion-item" onclick="selectPendantFromSuggestion('${escapeJsAttr(m.pendant.id)}', '${escapeJsAttr(m.pendant.name)}', '${escapeJsAttr(m.suggestedVariant)}')">
+          <div class="suggestion-item" onclick="selectPendantFromMainSuggestion('${escapeJsAttr(m.pendant.id)}', '${escapeJsAttr(m.pendant.name)}', '${escapeJsAttr(m.suggestedVariant)}')">
             <span class="suggestion-name">${escapeHtml(m.pendant.name)}</span>
             <span class="suggestion-sub">${escapeHtml(subText)}</span>
           </div>
@@ -990,17 +1434,17 @@
     box.classList.add("show");
   }
 
-  function selectPendantFromSuggestion(id, name, variantKey) {
+  function selectPendantFromMainSuggestion(id, name, variantKey) {
     const select = document.getElementById("pendantSelect");
     const input = document.getElementById("pendantSearchInput");
     select.value = id;
     input.value = name;
     activeVariant = VARIANT_ORDER.includes(variantKey) ? variantKey : "normal";
-    hideSuggestions();
+    hideMainSuggestions();
     renderSelectedPendant();
   }
 
-  function triggerSearch() {
+  function triggerMainSearch() {
     const input = document.getElementById("pendantSearchInput");
     const select = document.getElementById("pendantSelect");
     const matches = findMatchingPendants(input.value);
@@ -1008,27 +1452,109 @@
     if (matches.length > 0) {
       select.value = matches[0].pendant.id;
       activeVariant = matches[0].suggestedVariant || "normal";
-      hideSuggestions();
+      hideMainSuggestions();
       renderSelectedPendant();
     } else {
-      renderSuggestions();
+      renderMainSuggestions();
     }
   }
 
-  function handleSearchKeydown(event) {
+  function handleMainSearchKeydown(event) {
     if (event.key === "Enter") {
       event.preventDefault();
-      triggerSearch();
+      triggerMainSearch();
     } else if (event.key === "Escape") {
-      hideSuggestions();
+      hideMainSuggestions();
+    }
+  }
+
+  function renderCompareSuggestions(slot) {
+    const input = document.getElementById(`searchInput${slot}`);
+    const box = document.getElementById(`suggestionsBox${slot}`);
+
+    if (pendantDatabase.length === 0) {
+      hideCompareSuggestions(slot);
+      return;
+    }
+
+    const q = input.value.trim();
+    if (!q) {
+      hideCompareSuggestions(slot);
+      return;
+    }
+
+    const matches = findMatchingPendants(q);
+
+    if (matches.length === 0) {
+      box.innerHTML = `<div class="suggestion-empty">ไม่พบจี้เครื่องรางที่ตรงกับ "${escapeHtml(q)}"</div>`;
+      box.classList.add("show");
+      return;
+    }
+
+    box.innerHTML = matches
+      .map(m => {
+        const vLabel = VARIANT_LABELS[m.suggestedVariant] || "Normal";
+        const subText = m.previewText ? `[${vLabel}] ${m.previewText}` : `โหมด ${vLabel}`;
+        return `
+          <div class="suggestion-item" onclick="selectFromCompareSuggestion(${slot}, '${escapeJsAttr(m.pendant.id)}', '${escapeJsAttr(m.pendant.name)}', '${escapeJsAttr(m.suggestedVariant)}')">
+            <span class="suggestion-name">${escapeHtml(m.pendant.name)}</span>
+            <span class="suggestion-sub">${escapeHtml(subText)}</span>
+          </div>
+        `;
+      })
+      .join("");
+
+    box.classList.add("show");
+  }
+
+  function selectFromCompareSuggestion(slot, id, name, variantKey) {
+    const select = document.getElementById(`pendantSelect${slot}`);
+    const input = document.getElementById(`searchInput${slot}`);
+    select.value = id;
+    input.value = name;
+    activeCompareVariants[slot] = VARIANT_ORDER.includes(variantKey) ? variantKey : "normal";
+    hideCompareSuggestions(slot);
+    updateCompareClearButton(slot);
+    renderComparisonTable();
+  }
+
+  function triggerCompareSearch(slot) {
+    const input = document.getElementById(`searchInput${slot}`);
+    const select = document.getElementById(`pendantSelect${slot}`);
+    const matches = findMatchingPendants(input.value);
+
+    if (matches.length > 0) {
+      select.value = matches[0].pendant.id;
+      activeCompareVariants[slot] = matches[0].suggestedVariant || "normal";
+      hideCompareSuggestions(slot);
+      updateCompareClearButton(slot);
+      renderComparisonTable();
+    } else {
+      renderCompareSuggestions(slot);
+    }
+  }
+
+  function handleCompareSearchKeydown(event, slot) {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      triggerCompareSearch(slot);
+    } else if (event.key === "Escape") {
+      hideCompareSuggestions(slot);
     }
   }
 
   document.addEventListener("click", function (event) {
-    const wrapper = document.getElementById("searchWrapper");
-    if (wrapper && !wrapper.contains(event.target)) {
-      hideSuggestions();
+    const mainWrap = document.getElementById("mainSearchWrapper");
+    if (mainWrap && !mainWrap.contains(event.target)) {
+      hideMainSuggestions();
     }
+
+    document.querySelectorAll(".search-wrapper[data-slot]").forEach(wrapper => {
+      if (!wrapper.contains(event.target)) {
+        const slot = wrapper.getAttribute("data-slot");
+        if (slot) hideCompareSuggestions(slot);
+      }
+    });
   });
 
   function updateClearButtonState() {
@@ -1044,7 +1570,7 @@
     select.value = "";
     input.value = "";
     activeVariant = "normal";
-    hideSuggestions();
+    hideMainSuggestions();
     renderSelectedPendant();
   }
 
@@ -1067,6 +1593,232 @@
     if (!VARIANT_ORDER.includes(variantKey)) return;
     activeVariant = variantKey;
     renderSelectedPendant();
+  }
+
+  function updateCompareClearButton(slot) {
+    const select = document.getElementById(`pendantSelect${slot}`);
+    const clearBtn = document.getElementById(`clearBtn${slot}`);
+    if (!select || !clearBtn) return;
+    clearBtn.disabled = !select.value || pendantDatabase.length === 0;
+  }
+
+  function onCompareSelectChange(slot) {
+    const selectedId = document.getElementById(`pendantSelect${slot}`).value;
+    const pendant = pendantDatabase.find(p => p.id === selectedId);
+    if (pendant) {
+      const currentSkills = getVariantSkills(pendant, activeCompareVariants[slot]);
+      if (currentSkills.length === 0) {
+        const firstAvailable = VARIANT_ORDER.find(v => getVariantSkills(pendant, v).length > 0);
+        if (firstAvailable) {
+          activeCompareVariants[slot] = firstAvailable;
+        }
+      }
+    }
+    updateCompareClearButton(slot);
+    renderComparisonTable();
+  }
+
+  function clearCompareSlot(slot) {
+    if (pendantDatabase.length === 0) return;
+    const select = document.getElementById(`pendantSelect${slot}`);
+    const input = document.getElementById(`searchInput${slot}`);
+    select.value = "";
+    input.value = "";
+    activeCompareVariants[slot] = "normal";
+    hideCompareSuggestions(slot);
+    updateCompareClearButton(slot);
+    renderComparisonTable();
+  }
+
+  function selectCompareSlotVariant(slot, variantKey) {
+    if (!VARIANT_ORDER.includes(variantKey)) return;
+    activeCompareVariants[slot] = variantKey;
+    renderComparisonTable();
+  }
+
+  function renderCompareHeaderHtml(slot, pendant, fallbackTitle) {
+    if (!pendant) {
+      return `<span class="head-title">${escapeHtml(fallbackTitle)}</span>`;
+    }
+
+    const currentVar = activeCompareVariants[slot] || "normal";
+    const variantData = getVariantData(pendant, currentVar);
+    const imgUrl = variantData.image;
+
+    const imgHtml = imgUrl
+      ? `<img class="head-thumb" src="${escapeHtml(imgUrl)}" alt="${escapeHtml(pendant.name)} ${escapeHtml(VARIANT_LABELS[currentVar])}" onerror="handleHeadImgError(this)" />`
+      : `<span class="head-thumb-placeholder">ไม่มีรูป</span>`;
+
+    const tabsHtml = VARIANT_ORDER.map(vKey => {
+      const hasData = getVariantSkills(pendant, vKey).length > 0;
+      const isActive = currentVar === vKey;
+      return `
+        <button
+          type="button"
+          class="variant-btn ${isActive ? "active" : ""} ${!hasData ? "no-data" : ""}"
+          data-variant="${vKey}"
+          onclick="selectCompareSlotVariant(${slot}, '${vKey}')"
+        >${escapeHtml(VARIANT_LABELS[vKey])}</button>
+      `;
+    }).join("");
+
+    return `
+      <div class="head-content">
+        <span class="head-title">${escapeHtml(pendant.name)}</span>
+        ${imgHtml}
+        <div class="variant-tabs">${tabsHtml}</div>
+      </div>
+    `;
+  }
+
+  function renderThreeColsForSkill(skillObj, isSlot1End) {
+    const endClass = isSlot1End ? "slot-1-end" : "";
+
+    if (!skillObj) {
+      return `
+        <td class="col-skill"><span class="empty-cell-dash">-</span></td>
+        <td class="col-percent"><span class="empty-cell-dash">-</span></td>
+        <td class="col-growth ${endClass}"><span class="empty-cell-dash">-</span></td>
+      `;
+    }
+
+    const percentStr = String(skillObj.percent || "ไม่ระบุเปอร์เซ็นต์");
+    const isNoPercent = percentStr === "ไม่ระบุเปอร์เซ็นต์";
+    const growthInfo = formatGrowthValue(skillObj.growth);
+
+    return `
+      <td class="col-skill">
+        <span class="skill-slot-tag">[${skillObj.slotIndex}]</span>${escapeHtml(skillObj.desc)}
+      </td>
+      <td class="col-percent">
+        <span class="percent-badge ${isNoPercent ? 'percent-none' : ''}">
+          ${escapeHtml(percentStr)}
+        </span>
+      </td>
+      <td class="col-growth ${endClass}">
+        <span class="growth-badge ${growthInfo.isEmpty ? 'growth-empty' : ''}">
+          ${escapeHtml(growthInfo.text)}
+        </span>
+      </td>
+    `;
+  }
+
+  function renderComparisonTable() {
+    const container = document.getElementById("comparisonTableContainer");
+    const id1 = document.getElementById("pendantSelect1").value;
+    const id2 = document.getElementById("pendantSelect2").value;
+
+    const pendant1 = pendantDatabase.find(p => p.id === id1) || null;
+    const pendant2 = pendantDatabase.find(p => p.id === id2) || null;
+
+    if (!pendant1 && !pendant2) {
+      container.innerHTML = `<div class="empty-state">กรุณาเลือกจี้เครื่องรางอย่างน้อย 1 ชิ้นเพื่อดูข้อมูล</div>`;
+      return;
+    }
+
+    const headHtml1 = renderCompareHeaderHtml(1, pendant1, "ยังไม่ได้เลือกจี้ชิ้นที่ 1");
+    const headHtml2 = renderCompareHeaderHtml(2, pendant2, "ยังไม่ได้เลือกจี้ชิ้นที่ 2");
+
+    const rawSkills1 = pendant1 ? getVariantSkills(pendant1, activeCompareVariants[1]) : [];
+    const rawSkills2 = pendant2 ? getVariantSkills(pendant2, activeCompareVariants[2]) : [];
+
+    const skills1 = rawSkills1.map((s, idx) => ({
+      ...s,
+      slotIndex: idx + 1,
+      norm: normalizeSkillText(s.desc)
+    }));
+
+    const skills2 = rawSkills2.map((s, idx) => ({
+      ...s,
+      slotIndex: idx + 1,
+      norm: normalizeSkillText(s.desc)
+    }));
+
+    const usedRightIndices = new Set();
+    const matchedRows = [];
+    const unmatchedLeft = [];
+
+    skills1.forEach(s1 => {
+      if (!s1.norm) {
+        unmatchedLeft.push(s1);
+        return;
+      }
+
+      const foundIdx2 = skills2.findIndex((s2, idx2) => !usedRightIndices.has(idx2) && s2.norm === s1.norm);
+
+      if (foundIdx2 !== -1) {
+        usedRightIndices.add(foundIdx2);
+        matchedRows.push({
+          left: s1,
+          right: skills2[foundIdx2]
+        });
+      } else {
+        unmatchedLeft.push(s1);
+      }
+    });
+
+    const unmatchedRight = skills2.filter((_, idx2) => !usedRightIndices.has(idx2));
+
+    let bodyHtml = "";
+
+    matchedRows.forEach(pair => {
+      bodyHtml += `
+        <tr class="matched-row">
+          ${renderThreeColsForSkill(pair.left, true)}
+          ${renderThreeColsForSkill(pair.right, false)}
+        </tr>
+      `;
+    });
+
+    const maxDiffRows = Math.max(unmatchedLeft.length, unmatchedRight.length);
+    if (maxDiffRows > 0) {
+      bodyHtml += `
+        <tr class="diff-section-row">
+          <td colspan="6">สกิลที่แตกต่าง</td>
+        </tr>
+      `;
+
+      for (let i = 0; i < maxDiffRows; i++) {
+        const leftItem = unmatchedLeft[i] || null;
+        const rightItem = unmatchedRight[i] || null;
+        bodyHtml += `
+          <tr>
+            ${renderThreeColsForSkill(leftItem, true)}
+            ${renderThreeColsForSkill(rightItem, false)}
+          </tr>
+        `;
+      }
+    }
+
+    container.innerHTML = `
+      <table class="compare-table">
+        <colgroup>
+          <col style="width: 24%;" />
+          <col style="width: 13%;" />
+          <col style="width: 13%;" />
+          <col style="width: 24%;" />
+          <col style="width: 13%;" />
+          <col style="width: 13%;" />
+        </colgroup>
+        <thead>
+          <tr>
+            <th colspan="3" class="pendant-head slot-1">${headHtml1}</th>
+            <th colspan="3" class="pendant-head">${headHtml2}</th>
+          </tr>
+          <tr>
+            <th class="sub-col-head col-skill">สกิล</th>
+            <th class="sub-col-head">เปอร์เซ็นต์</th>
+            <th class="sub-col-head slot-1-end">เติบโต</th>
+            <th class="sub-col-head col-skill">สกิล</th>
+            <th class="sub-col-head">เปอร์เซ็นต์</th>
+            <th class="sub-col-head">เติบโต</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${bodyHtml || `<tr><td colspan="6" class="empty-state">ไม่มีข้อมูลความสามารถในโหมดที่เลือก</td></tr>`}
+        </tbody>
+      </table>
+    `;
   }
 
   function fetchJsonp(url, timeoutMs = 15000) {
@@ -1105,6 +1857,8 @@
 
   async function loadPendantsFromSheet() {
     const select = document.getElementById("pendantSelect");
+    const select1 = document.getElementById("pendantSelect1");
+    const select2 = document.getElementById("pendantSelect2");
     const loadingArea = document.getElementById("loadingArea");
     const container = document.getElementById("pendantDetails");
 
@@ -1128,23 +1882,36 @@
       pendantDatabase = json.data;
 
       if (pendantDatabase.length === 0) {
-        select.innerHTML = `<option value="">ไม่พบข้อมูลจี้เครื่องราง</option>`;
+        const emptyOpt = `<option value="">ไม่พบข้อมูลจี้เครื่องราง</option>`;
+        select.innerHTML = emptyOpt;
+        select1.innerHTML = emptyOpt;
+        select2.innerHTML = emptyOpt;
         await finishLoadingBarAndShowControls();
         updateClearButtonState();
+        updateCompareClearButton(1);
+        updateCompareClearButton(2);
         return;
       }
 
-      const placeholderOption = `<option value="">เลือกจี้เครื่องราง</option>`;
       const itemOptions = pendantDatabase
         .map(item => `<option value="${escapeHtml(item.id)}">${escapeHtml(item.name)}</option>`)
         .join("");
 
-      select.innerHTML = placeholderOption + itemOptions;
+      select.innerHTML = `<option value="">เลือกจี้เครื่องราง</option>` + itemOptions;
       select.value = "";
+
+      const compareOptionsHtml = `<option value="">เลือกจี้เครื่องราง</option>` + itemOptions;
+      select1.innerHTML = compareOptionsHtml;
+      select2.innerHTML = compareOptionsHtml;
+      select1.value = "";
+      select2.value = "";
 
       await finishLoadingBarAndShowControls();
       updateClearButtonState();
+      updateCompareClearButton(1);
+      updateCompareClearButton(2);
       renderSelectedPendant();
+      renderComparisonTable();
     } catch (error) {
       stopLoadingBar();
       loadingArea.innerHTML = "";
@@ -1246,19 +2013,17 @@
 
     container.innerHTML = `
       ${headerBarHtml}
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th class="col-slot">ช่อง</th>
-              <th>ความสามารถ (Skill)</th>
-              <th class="col-percent">เปอร์เซ็นต์</th>
-              <th class="col-growth">เติบโต</th>
-            </tr>
-          </thead>
-          <tbody>${rowsHtml}</tbody>
-        </table>
-      </div>
+      <table class="detail-table">
+        <thead>
+          <tr>
+            <th class="col-slot">ช่อง</th>
+            <th>ความสามารถ (Skill)</th>
+            <th class="col-percent">เปอร์เซ็นต์</th>
+            <th class="col-growth">เติบโต</th>
+          </tr>
+        </thead>
+        <tbody>${rowsHtml}</tbody>
+      </table>
     `;
   }
 
