@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ข้อมูลจี้เครื่องราง V.2</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #1e293b;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --accent: #eff6ff;
+      --growth-bg: #fef3c7;
+      --growth-text: #92400e;
+      --dark-theme: #334155;
+      --white-theme: #0284c7;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 24px;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      font-size: 1.6rem;
+      margin-bottom: 6px;
+    }
+
+    p.subtitle {
+      color: var(--muted);
+      font-size: 0.98rem;
+      margin-top: 0;
+      margin-bottom: 20px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+    }
+
+    .is-hidden {
+      display: none !important;
+    }
+
+    /* แถบ Loading แบบไฟเต็มหลอด */
+    .loading-panel {
+      padding: 18px 16px;
+      border-radius: 10px;
+      background-color: #f8fafc;
+      border: 1px solid var(--border);
+      transition: opacity 0.25s ease, transform 0.25s ease;
+    }
+
+    .loading-panel.done {
+      opacity: 0;
+      transform: translateY(-4px);
+      pointer-events: none;
+    }
+
+    .loading-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .loading-percent {
+      color: var(--primary);
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .loading-track {
+      position: relative;
+      width: 100%;
+      height: 14px;
+      border-radius: 999px;
+      background-color: #e2e8f0;
+      overflow: hidden;
+      box-shadow: inset 0 1px 3px rgba(15, 23, 42, 0.12);
+    }
+
+    .loading-fill {
+      position: relative;
+      width: 0%;
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #2563eb 0%, #38bdf8 60%, #60a5fa 100%);
+      box-shadow: 0 0 12px rgba(37, 99, 235, 0.55);
+      transition: width 0.22s ease-out, box-shadow 0.25s ease;
+    }
+
+    .loading-fill::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.45) 50%,
+        rgba(255, 255, 255, 0) 100%
+      );
+      animation: shimmerSweep 1.15s infinite;
+    }
+
+    .loading-fill.full {
+      background: linear-gradient(90deg, #16a34a 0%, #22c55e 65%, #4ade80 100%);
+      box-shadow: 0 0 16px rgba(34, 197, 94, 0.75);
+    }
+
+    @keyframes shimmerSweep {
+      0% {
+        transform: translateX(-100%);
+      }
+      100% {
+        transform: translateX(100%);
+      }
+    }
+
+    .search-wrapper {
+      position: relative;
+      margin-bottom: 12px;
+    }
+
+    .search-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .search-input {
+      flex: 1;
+      min-width: 0;
+      padding: 11px 14px;
+      font-size: 0.98rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background-color: #fff;
+      color: var(--text);
+      outline: none;
+    }
+
+    .search-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+    }
+
+    .search-btn {
+      padding: 11px 16px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      background-color: var(--primary);
+      color: #fff;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: 0.15s;
+      flex-shrink: 0;
+    }
+
+    .search-btn:hover:not(:disabled) {
+      background-color: var(--primary-hover);
+    }
+
+    .search-btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .suggestions-box {
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0;
+      right: 0;
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.12);
+      z-index: 30;
+      max-height: 260px;
+      overflow-y: auto;
+      display: none;
+    }
+
+    .suggestions-box.show {
+      display: block;
+    }
+
+    .suggestion-item {
+      padding: 10px 14px;
+      cursor: pointer;
+      border-bottom: 1px solid #f1f5f9;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .suggestion-item:last-child {
+      border-bottom: none;
+    }
+
+    .suggestion-item:hover {
+      background-color: var(--accent);
+    }
+
+    .suggestion-name {
+      font-weight: 600;
+      font-size: 0.94rem;
+      color: var(--text);
+    }
+
+    .suggestion-sub {
+      font-size: 0.78rem;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .suggestion-empty {
+      padding: 12px 14px;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .select-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    select {
+      flex: 1;
+      min-width: 0;
+      padding: 12px 14px;
+      font-size: 1rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background-color: #fff;
+      cursor: pointer;
+    }
+
+    .clear-btn {
+      width: 46px;
+      height: 46px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background-color: #fff;
+      color: var(--text);
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: 0.15s;
+      flex-shrink: 0;
+    }
+
+    .clear-btn:hover:not(:disabled) {
+      background-color: #fee2e2;
+      border-color: #fca5a5;
+      color: #dc2626;
+    }
+
+    .clear-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      background-color: #f8fafc;
+    }
+
+    .pendant-header-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .pendant-showcase {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .image-frame {
+      width: 84px;
+      height: 84px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background-color: #f8fafc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      flex-shrink: 0;
+      padding: 4px;
+    }
+
+    .image-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    .image-placeholder {
+      font-size: 0.72rem;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.25;
+      padding: 4px;
+    }
+
+    .pendant-name-box {
+      display: inline-flex;
+      align-items: center;
+      padding: 10px 16px;
+      background-color: var(--accent);
+      border: 1px solid #bfdbfe;
+      border-radius: 10px;
+    }
+
+    .pendant-title {
+      font-size: 1.08rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin: 0;
+      line-height: 1.35;
+    }
+
+    .variant-tabs {
+      display: inline-flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .variant-btn {
+      padding: 8px 14px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background-color: #fff;
+      color: var(--text);
+      cursor: pointer;
+      transition: 0.15s;
+    }
+
+    .variant-btn:hover:not(:disabled) {
+      background-color: #f8fafc;
+      border-color: #cbd5e1;
+    }
+
+    .variant-btn.active[data-variant="normal"] {
+      background-color: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+    }
+
+    .variant-btn.active[data-variant="dark"] {
+      background-color: var(--dark-theme);
+      border-color: var(--dark-theme);
+      color: #fff;
+    }
+
+    .variant-btn.active[data-variant="white"] {
+      background-color: var(--white-theme);
+      border-color: var(--white-theme);
+      color: #fff;
+    }
+
+    .variant-btn.no-data {
+      opacity: 0.45;
+    }
+
+    .empty-variant-box {
+      margin-top: 14px;
+      padding: 18px;
+      border-radius: 8px;
+      background-color: #f8fafc;
+      border: 1px dashed #cbd5e1;
+      color: var(--muted);
+      text-align: center;
+      font-size: 0.92rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 14px;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 12px;
+      border-bottom: 1px solid var(--border);
+      line-height: 1.5;
+      font-size: 0.95rem;
+    }
+
+    th {
+      background-color: var(--accent);
+      color: var(--primary);
+      font-weight: 600;
+    }
+
+    .col-slot {
+      width: 56px;
+      text-align: center;
+    }
+
+    .col-percent {
+      width: 135px;
+      text-align: center;
+    }
+
+    .col-growth {
+      width: 125px;
+      text-align: center;
+    }
+
+    .percent-badge {
+      display: inline-block;
+      background-color: #dbeafe;
+      color: #1e40af;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      white-space: nowrap;
+    }
+
+    .percent-none {
+      background-color: #f1f5f9;
+      color: var(--muted);
+    }
+
+    .growth-badge {
+      display: inline-block;
+      background-color: var(--growth-bg);
+      color: var(--growth-text);
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.86rem;
+      white-space: nowrap;
+    }
+
+    .growth-empty {
+      background-color: #f1f5f9;
+      color: var(--muted);
+    }
+
+    .error-box {
+      color: #dc2626;
+      background-color: #fef2f2;
+      border: 1px solid #fecaca;
+      padding: 14px;
+      border-radius: 8px;
+      margin-top: 14px;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 12px;
+      }
+
+      h1 {
+        font-size: 1.25rem;
+      }
+
+      p.subtitle {
+        font-size: 0.85rem;
+        margin-bottom: 14px;
+      }
+
+      .card {
+        padding: 14px;
+        border-radius: 10px;
+      }
+
+      .loading-panel {
+        padding: 14px 12px;
+      }
+
+      .loading-top {
+        font-size: 0.84rem;
+      }
+
+      .loading-track {
+        height: 11px;
+      }
+
+      .search-wrapper {
+        margin-bottom: 10px;
+      }
+
+      .search-row {
+        gap: 6px;
+      }
+
+      .search-input {
+        padding: 9px 10px;
+        font-size: 0.86rem;
+      }
+
+      .search-btn {
+        padding: 9px 12px;
+        font-size: 0.82rem;
+      }
+
+      .suggestion-name {
+        font-size: 0.84rem;
+      }
+
+      .suggestion-sub {
+        font-size: 0.72rem;
+      }
+
+      .suggestion-empty {
+        font-size: 0.8rem;
+      }
+
+      .select-row {
+        gap: 8px;
+      }
+
+      select {
+        padding: 10px 10px;
+        font-size: 0.88rem;
+      }
+
+      .clear-btn {
+        width: 40px;
+        height: 40px;
+        font-size: 0.95rem;
+      }
+
+      .pendant-header-bar {
+        gap: 8px;
+        margin-top: 14px;
+      }
+
+      .pendant-showcase {
+        gap: 10px;
+      }
+
+      .image-frame {
+        width: 64px;
+        height: 64px;
+        border-radius: 8px;
+      }
+
+      .image-placeholder {
+        font-size: 0.65rem;
+      }
+
+      .pendant-name-box {
+        padding: 8px 12px;
+        border-radius: 8px;
+      }
+
+      .pendant-title {
+        font-size: 0.9rem;
+      }
+
+      .variant-btn {
+        padding: 6px 10px;
+        font-size: 0.78rem;
+      }
+
+      table {
+        margin-top: 12px;
+      }
+
+      th, td {
+        padding: 8px 5px;
+        font-size: 0.76rem;
+        line-height: 1.42;
+      }
+
+      .col-slot {
+        width: 34px;
+      }
+
+      .col-percent,
+      .col-growth {
+        width: auto;
+      }
+
+      .percent-badge,
+      .growth-badge {
+        padding: 2px 6px;
+        font-size: 0.7rem;
+      }
+
+      .error-box {
+        padding: 10px;
+        font-size: 0.82rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>ข้อมูลจี้เครื่องราง V.2</h1>
+  <p class="subtitle">ค้นหาหรือเลือกจี้เครื่องราง แล้วสลับดูแบบ Normal, [ดาร์ค] และ [ไวท์]</p>
+
+  <div class="card">
+    <div id="loadingArea"></div>
+
+    <div id="mainControls" class="is-hidden">
+      <div class="search-wrapper" id="searchWrapper">
+        <div class="search-row">
+          <input
+            id="pendantSearchInput"
+            class="search-input"
+            type="text"
+            placeholder="พิมพ์ชื่อจี้เครื่องราง หรือคำในความสามารถ..."
+            autocomplete="off"
+            oninput="renderSuggestions()"
+            onfocus="renderSuggestions()"
+            onkeydown="handleSearchKeydown(event)"
+          />
+          <button
+            id="searchBtn"
+            class="search-btn"
+            type="button"
+            onclick="triggerSearch()"
+          >Search</button>
+        </div>
+        <div id="suggestionsBox" class="suggestions-box"></div>
+      </div>
+
+      <div class="select-row">
+        <select id="pendantSelect" onchange="handlePendantDropdownChange()"></select>
+        <button
+          id="clearSelectionBtn"
+          class="clear-btn"
+          type="button"
+          title="ล้างค่าการเลือก"
+          aria-label="ล้างค่าการเลือก"
+          onclick="clearSelection()"
+          disabled
+        >✕</button>
+      </div>
+    </div>
+
+    <div id="pendantDetails"></div>
+  </div>
+</div>
+
+<script>
+  const WEB_APP_URL = "https://script.google.com/macros/s/AKfycby4fmF9t573ywsirLCRnaQZZqUsPFxeSMX8oH2fhz9E6OtiIlC46LumfuRYLsxfTEOldw/exec";
+  const VARIANT_ORDER = ["normal", "dark", "white"];
+  const VARIANT_LABELS = {
+    normal: "Normal",
+    dark: "[ดาร์ค]",
+    white: "[ไวท์]"
+  };
+
+  let pendantDatabase = [];
+  let activeVariant = "normal";
+  let loadingTimer = null;
+  let currentProgress = 0;
+
+  function setMainControlsVisible(visible) {
+    const mainControls = document.getElementById("mainControls");
+    if (!mainControls) return;
+    if (visible) {
+      mainControls.classList.remove("is-hidden");
+    } else {
+      mainControls.classList.add("is-hidden");
+    }
+  }
+
+  function startLoadingBar() {
+    const loadingArea = document.getElementById("loadingArea");
+    const detailsArea = document.getElementById("pendantDetails");
+    stopLoadingBar();
+    currentProgress = 12;
+    setMainControlsVisible(false);
+    detailsArea.innerHTML = "";
+
+    loadingArea.innerHTML = `
+      <div id="loadingPanel" class="loading-panel">
+        <div class="loading-top">
+          <span id="loadingStatusText">Loading</span>
+          <span id="loadingPercentText" class="loading-percent">12%</span>
+        </div>
+        <div class="loading-track">
+          <div id="loadingFillBar" class="loading-fill" style="width: 12%;"></div>
+        </div>
+      </div>
+    `;
+
+    loadingTimer = setInterval(() => {
+      if (currentProgress < 90) {
+        const step = currentProgress < 50 ? 7 : currentProgress < 75 ? 4 : 2;
+        currentProgress = Math.min(90, currentProgress + step);
+        updateLoadingBarVisual(currentProgress, "Loading", false);
+      }
+    }, 220);
+  }
+
+  function updateLoadingBarVisual(pct, statusText, isFull) {
+    const fill = document.getElementById("loadingFillBar");
+    const pctText = document.getElementById("loadingPercentText");
+    const labelText = document.getElementById("loadingStatusText");
+    if (!fill || !pctText || !labelText) return;
+
+    const clamped = Math.max(0, Math.min(100, Math.round(pct)));
+    fill.style.width = `${clamped}%`;
+    pctText.textContent = `${clamped}%`;
+    if (statusText) labelText.textContent = statusText;
+    if (isFull) {
+      fill.classList.add("full");
+    }
+  }
+
+  function finishLoadingBarAndShowControls() {
+    stopLoadingBar();
+    const loadingArea = document.getElementById("loadingArea");
+    const panel = document.getElementById("loadingPanel");
+
+    if (!panel) {
+      loadingArea.innerHTML = "";
+      setMainControlsVisible(true);
+      return Promise.resolve();
+    }
+
+    currentProgress = 100;
+    updateLoadingBarVisual(100, "Loading", true);
+
+    return new Promise(resolve => {
+      setTimeout(() => {
+        panel.classList.add("done");
+        setTimeout(() => {
+          loadingArea.innerHTML = "";
+          setMainControlsVisible(true);
+          resolve();
+        }, 220);
+      }, 280);
+    });
+  }
+
+  function stopLoadingBar() {
+    if (loadingTimer) {
+      clearInterval(loadingTimer);
+      loadingTimer = null;
+    }
+  }
+
+  function getVariantData(pendant, variantKey) {
+    if (!pendant || !pendant.variants || !pendant.variants[variantKey]) {
+      return { image: "", skills: [] };
+    }
+    const v = pendant.variants[variantKey];
+    return {
+      image: String(v.image || "").trim(),
+      skills: Array.isArray(v.skills) ? v.skills : []
+    };
+  }
+
+  function getVariantSkills(pendant, variantKey) {
+    return getVariantData(pendant, variantKey).skills;
+  }
+
+  function handleImgError(imgEl) {
+    imgEl.outerHTML = `<span class="image-placeholder">ไม่มีรูป</span>`;
+  }
+
+  function formatGrowthValue(growth) {
+    if (growth === null || growth === undefined) {
+      return { text: "-", isEmpty: true };
+    }
+
+    if (typeof growth === "number") {
+      if (isNaN(growth)) return { text: "-", isEmpty: true };
+      if (Math.abs(growth) > 0 && Math.abs(growth) < 1) {
+        const pct = Math.round(growth * 10000) / 100;
+        return { text: `${pct > 0 ? "+" : ""}${pct}%`, isEmpty: false };
+      }
+      return { text: `${growth > 0 ? "+" : ""}${growth}`, isEmpty: false };
+    }
+
+    const str = String(growth).trim();
+    if (!str || str === "-") {
+      return { text: "-", isEmpty: true };
+    }
+
+    if (/^[+-]?\d+(\.\d+)?$/.test(str)) {
+      const num = Number(str);
+      if (Math.abs(num) > 0 && Math.abs(num) < 1) {
+        const pct = Math.round(num * 10000) / 100;
+        return { text: `${pct > 0 ? "+" : ""}${pct}%`, isEmpty: false };
+      }
+      return { text: `${num > 0 ? "+" : ""}${num}`, isEmpty: false };
+    }
+
+    return { text: str, isEmpty: false };
+  }
+
+  function hideSuggestions() {
+    const box = document.getElementById("suggestionsBox");
+    box.classList.remove("show");
+  }
+
+  function findMatchingPendants(keyword) {
+    const q = keyword.trim().toLowerCase();
+    if (!q) return [];
+
+    return pendantDatabase
+      .map(item => {
+        const nameMatch = (item.name || "").toLowerCase().includes(q);
+        let matchedVariant = null;
+        let matchedSkillDesc = "";
+
+        for (const vKey of VARIANT_ORDER) {
+          const skills = getVariantSkills(item, vKey);
+          const found = skills.find(s =>
+            (s.desc || "").toLowerCase().includes(q) ||
+            String(s.growth || "").toLowerCase().includes(q) ||
+            String(s.percent || "").toLowerCase().includes(q)
+          );
+          if (found) {
+            matchedVariant = vKey;
+            matchedSkillDesc = found.desc;
+            break;
+          }
+        }
+
+        if (!nameMatch && !matchedVariant) return null;
+
+        if (!matchedVariant) {
+          for (const vKey of VARIANT_ORDER) {
+            const skills = getVariantSkills(item, vKey);
+            if (skills.length > 0) {
+              matchedVariant = vKey;
+              matchedSkillDesc = skills[0].desc;
+              break;
+            }
+          }
+        }
+
+        return {
+          pendant: item,
+          suggestedVariant: matchedVariant || "normal",
+          previewText: matchedSkillDesc
+        };
+      })
+      .filter(Boolean);
+  }
+
+  function renderSuggestions() {
+    const input = document.getElementById("pendantSearchInput");
+    const box = document.getElementById("suggestionsBox");
+
+    if (pendantDatabase.length === 0) {
+      hideSuggestions();
+      return;
+    }
+
+    const q = input.value.trim();
+    if (!q) {
+      hideSuggestions();
+      return;
+    }
+
+    const matches = findMatchingPendants(q);
+
+    if (matches.length === 0) {
+      box.innerHTML = `<div class="suggestion-empty">ไม่พบจี้เครื่องรางที่ตรงกับ "${escapeHtml(q)}"</div>`;
+      box.classList.add("show");
+      return;
+    }
+
+    box.innerHTML = matches
+      .map(m => {
+        const vLabel = VARIANT_LABELS[m.suggestedVariant] || "Normal";
+        const subText = m.previewText ? `[${vLabel}] ${m.previewText}` : `โหมด ${vLabel}`;
+        return `
+          <div class="suggestion-item" onclick="selectPendantFromSuggestion('${escapeJsAttr(m.pendant.id)}', '${escapeJsAttr(m.pendant.name)}', '${escapeJsAttr(m.suggestedVariant)}')">
+            <span class="suggestion-name">${escapeHtml(m.pendant.name)}</span>
+            <span class="suggestion-sub">${escapeHtml(subText)}</span>
+          </div>
+        `;
+      })
+      .join("");
+
+    box.classList.add("show");
+  }
+
+  function selectPendantFromSuggestion(id, name, variantKey) {
+    const select = document.getElementById("pendantSelect");
+    const input = document.getElementById("pendantSearchInput");
+    select.value = id;
+    input.value = name;
+    activeVariant = VARIANT_ORDER.includes(variantKey) ? variantKey : "normal";
+    hideSuggestions();
+    renderSelectedPendant();
+  }
+
+  function triggerSearch() {
+    const input = document.getElementById("pendantSearchInput");
+    const select = document.getElementById("pendantSelect");
+    const matches = findMatchingPendants(input.value);
+
+    if (matches.length > 0) {
+      select.value = matches[0].pendant.id;
+      activeVariant = matches[0].suggestedVariant || "normal";
+      hideSuggestions();
+      renderSelectedPendant();
+    } else {
+      renderSuggestions();
+    }
+  }
+
+  function handleSearchKeydown(event) {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      triggerSearch();
+    } else if (event.key === "Escape") {
+      hideSuggestions();
+    }
+  }
+
+  document.addEventListener("click", function (event) {
+    const wrapper = document.getElementById("searchWrapper");
+    if (wrapper && !wrapper.contains(event.target)) {
+      hideSuggestions();
+    }
+  });
+
+  function updateClearButtonState() {
+    const select = document.getElementById("pendantSelect");
+    const clearBtn = document.getElementById("clearSelectionBtn");
+    clearBtn.disabled = !select.value || pendantDatabase.length === 0;
+  }
+
+  function clearSelection() {
+    const select = document.getElementById("pendantSelect");
+    const input = document.getElementById("pendantSearchInput");
+    if (pendantDatabase.length === 0) return;
+    select.value = "";
+    input.value = "";
+    activeVariant = "normal";
+    hideSuggestions();
+    renderSelectedPendant();
+  }
+
+  function handlePendantDropdownChange() {
+    const selectedId = document.getElementById("pendantSelect").value;
+    const pendant = pendantDatabase.find(p => p.id === selectedId);
+    if (pendant) {
+      const currentSkills = getVariantSkills(pendant, activeVariant);
+      if (currentSkills.length === 0) {
+        const firstAvailable = VARIANT_ORDER.find(v => getVariantSkills(pendant, v).length > 0);
+        if (firstAvailable) {
+          activeVariant = firstAvailable;
+        }
+      }
+    }
+    renderSelectedPendant();
+  }
+
+  function selectVariant(variantKey) {
+    if (!VARIANT_ORDER.includes(variantKey)) return;
+    activeVariant = variantKey;
+    renderSelectedPendant();
+  }
+
+  function fetchJsonp(url, timeoutMs = 15000) {
+    return new Promise((resolve, reject) => {
+      const callbackName = "handlePendantJsonp_" + Date.now() + "_" + Math.floor(Math.random() * 10000);
+      const script = document.createElement("script");
+
+      const timer = setTimeout(() => {
+        cleanup();
+        reject(new Error("หมดเวลาในการเชื่อมต่อ Web App"));
+      }, timeoutMs);
+
+      function cleanup() {
+        clearTimeout(timer);
+        delete window[callbackName];
+        if (script.parentNode) {
+          script.parentNode.removeChild(script);
+        }
+      }
+
+      window[callbackName] = function (data) {
+        cleanup();
+        resolve(data);
+      };
+
+      script.onerror = function () {
+        cleanup();
+        reject(new Error("ไม่สามารถโหลดสคริปต์จาก Web App ได้"));
+      };
+
+      const separator = url.includes("?") ? "&" : "?";
+      script.src = `${url}${separator}callback=${encodeURIComponent(callbackName)}`;
+      document.body.appendChild(script);
+    });
+  }
+
+  async function loadPendantsFromSheet() {
+    const select = document.getElementById("pendantSelect");
+    const loadingArea = document.getElementById("loadingArea");
+    const container = document.getElementById("pendantDetails");
+
+    startLoadingBar();
+
+    try {
+      let json = null;
+
+      try {
+        const response = await fetch(WEB_APP_URL);
+        const rawText = await response.text();
+        json = JSON.parse(rawText);
+      } catch (fetchErr) {
+        json = await fetchJsonp(WEB_APP_URL);
+      }
+
+      if (!json || !json.ok || !Array.isArray(json.data)) {
+        throw new Error((json && json.error) || "รูปแบบข้อมูลจาก Web App ไม่ถูกต้อง");
+      }
+
+      pendantDatabase = json.data;
+
+      if (pendantDatabase.length === 0) {
+        select.innerHTML = `<option value="">ไม่พบข้อมูลจี้เครื่องราง</option>`;
+        await finishLoadingBarAndShowControls();
+        updateClearButtonState();
+        return;
+      }
+
+      const placeholderOption = `<option value="">เลือกจี้เครื่องราง</option>`;
+      const itemOptions = pendantDatabase
+        .map(item => `<option value="${escapeHtml(item.id)}">${escapeHtml(item.name)}</option>`)
+        .join("");
+
+      select.innerHTML = placeholderOption + itemOptions;
+      select.value = "";
+
+      await finishLoadingBarAndShowControls();
+      updateClearButtonState();
+      renderSelectedPendant();
+    } catch (error) {
+      stopLoadingBar();
+      loadingArea.innerHTML = "";
+      setMainControlsVisible(false);
+      container.innerHTML = `
+        <div class="error-box">
+          <strong>เกิดข้อผิดพลาดในการดึงข้อมูล:</strong><br/>
+          ${escapeHtml(error.message)}
+        </div>
+      `;
+    }
+  }
+
+  function renderSelectedPendant() {
+    const selectedId = document.getElementById("pendantSelect").value;
+    const container = document.getElementById("pendantDetails");
+
+    updateClearButtonState();
+
+    if (!selectedId) {
+      container.innerHTML = "";
+      return;
+    }
+
+    const pendant = pendantDatabase.find(p => p.id === selectedId);
+    if (!pendant) {
+      container.innerHTML = "";
+      return;
+    }
+
+    const variantData = getVariantData(pendant, activeVariant);
+    const currentSkills = variantData.skills;
+    const imageUrl = variantData.image;
+
+    const imageContentHtml = imageUrl
+      ? `<img src="${escapeHtml(imageUrl)}" alt="${escapeHtml(pendant.name)} ${escapeHtml(VARIANT_LABELS[activeVariant])}" onerror="handleImgError(this)" />`
+      : `<span class="image-placeholder">ไม่มีรูป</span>`;
+
+    const tabsHtml = VARIANT_ORDER.map(vKey => {
+      const skills = getVariantSkills(pendant, vKey);
+      const isActive = activeVariant === vKey;
+      const hasData = skills.length > 0;
+      return `
+        <button
+          type="button"
+          class="variant-btn ${isActive ? "active" : ""} ${!hasData ? "no-data" : ""}"
+          data-variant="${vKey}"
+          onclick="selectVariant('${vKey}')"
+        >${escapeHtml(VARIANT_LABELS[vKey])}</button>
+      `;
+    }).join("");
+
+    const headerBarHtml = `
+      <div class="pendant-header-bar">
+        <div class="pendant-showcase">
+          <div class="image-frame">${imageContentHtml}</div>
+          <div class="pendant-name-box">
+            <h2 class="pendant-title">${escapeHtml(pendant.name)}</h2>
+          </div>
+        </div>
+        <div class="variant-tabs">${tabsHtml}</div>
+      </div>
+    `;
+
+    if (currentSkills.length === 0) {
+      container.innerHTML = `
+        ${headerBarHtml}
+        <div class="empty-variant-box">
+          ไม่มีข้อมูลความสามารถสำหรับโหมด <strong>${escapeHtml(VARIANT_LABELS[activeVariant])}</strong>
+        </div>
+      `;
+      return;
+    }
+
+    const rowsHtml = currentSkills
+      .map((skill, index) => {
+        const percentStr = String(skill.percent || "ไม่ระบุเปอร์เซ็นต์");
+        const isNoPercent = percentStr === "ไม่ระบุเปอร์เซ็นต์";
+        const growthInfo = formatGrowthValue(skill.growth);
+
+        return `
+          <tr>
+            <td class="col-slot">${index + 1}</td>
+            <td>${escapeHtml(skill.desc)}</td>
+            <td class="col-percent">
+              <span class="percent-badge ${isNoPercent ? 'percent-none' : ''}">
+                ${escapeHtml(percentStr)}
+              </span>
+            </td>
+            <td class="col-growth">
+              <span class="growth-badge ${growthInfo.isEmpty ? 'growth-empty' : ''}">
+                ${escapeHtml(growthInfo.text)}
+              </span>
+            </td>
+          </tr>
+        `;
+      })
+      .join("");
+
+    container.innerHTML = `
+      ${headerBarHtml}
+      <table>
+        <thead>
+          <tr>
+            <th class="col-slot">ช่อง</th>
+            <th>ความสามารถ (Skill)</th>
+            <th class="col-percent">เปอร์เซ็นต์</th>
+            <th class="col-growth">เติบโต</th>
+          </tr>
+        </thead>
+        <tbody>${rowsHtml}</tbody>
+      </table>
+    `;
+  }
+
+  function escapeHtml(text) {
+    const div = document.createElement("div");
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  function escapeJsAttr(text) {
+    return String(text)
+      .replace(/\\/g, "\\\\")
+      .replace(/'/g, "\\'");
+  }
+
+  loadPendantsFromSheet();
+</script>
+
+</body>
+</html>
