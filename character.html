@@ -9,22 +9,24 @@
       --primary: #48a9bd;
       --primary-hover: #3897ab;
       --primary-light: #54b4c7;
-      --bg: #284256;
+      --bg: #2c4a5e;
       --card: #34546c;
-      --surface: #233a4c;
-      --surface-soft: #2c485e;
-      --text: #f8fafc;
-      --muted: #cbd5e1;
-      --border: #476b85;
-      --accent: rgba(72, 169, 189, 0.22);
-      --growth-bg: rgba(251, 191, 36, 0.22);
-      --growth-text: #fde68a;
-      --evo-theme: #48a9bd;
+      --surface: #284256;
+      --surface-soft: #233a4c;
+      --panel-dark: #34546c;
+      --panel-darker: #284256;
+      --text: #ffffff;
+      --muted: #dbeafe;
+      --border: rgba(255, 255, 255, 0.28);
+      --accent: rgba(72, 169, 189, 0.24);
+      --growth-bg: rgba(254, 240, 138, 0.18);
+      --growth-text: #fef08a;
+      --evo-theme: #0284c7;
       --legend-theme: #d97706;
       --mystic-theme: #7c3aed;
-      --costume-accent: rgba(168, 85, 247, 0.2);
-      --costume-border: #a855f7;
-      --costume-text: #e9d5ff;
+      --costume-accent: #284256;
+      --costume-border: rgba(255, 255, 255, 0.35);
+      --costume-text: #fde047;
     }
 
     * {
@@ -44,25 +46,55 @@
       margin: 0 auto;
     }
 
-    h1 {
-      font-size: 1.6rem;
-      margin-bottom: 6px;
-      color: #ffffff;
+    .top-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
     }
 
-    p.subtitle {
-      color: var(--muted);
-      font-size: 0.98rem;
-      margin-top: 0;
-      margin-bottom: 20px;
+    .top-header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 6px 12px;
+      font-size: 0.86rem;
+      font-weight: 700;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      background-color: var(--panel-darker);
+      color: #ffffff;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background-color 0.15s ease, border-color 0.15s ease;
+    }
+
+    .back-btn:hover {
+      background-color: var(--panel-dark);
+      border-color: #fde047;
+      color: #fde047;
+    }
+
+    h1 {
+      font-size: 1.6rem;
+      margin: 0;
+      color: #ffffff;
     }
 
     .card {
       background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 12px;
+      border-radius: 14px;
       padding: 20px;
-      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.28);
+      box-shadow: 0 4px 14px rgba(15, 23, 42, 0.22);
     }
 
     .is-hidden {
@@ -96,7 +128,7 @@
     }
 
     .loading-percent {
-      color: var(--primary-light);
+      color: #fde047;
       font-weight: 700;
       font-variant-numeric: tabular-nums;
     }
@@ -106,9 +138,9 @@
       width: 100%;
       height: 14px;
       border-radius: 999px;
-      background-color: #1b2e3d;
+      background-color: var(--surface-soft);
       overflow: hidden;
-      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.35);
+      box-shadow: inset 0 1px 3px rgba(15, 23, 42, 0.35);
     }
 
     .loading-fill {
@@ -116,8 +148,8 @@
       width: 0%;
       height: 100%;
       border-radius: 999px;
-      background: linear-gradient(90deg, #3897ab 0%, #48a9bd 60%, #7dd3fc 100%);
-      box-shadow: 0 0 12px rgba(72, 169, 189, 0.65);
+      background: linear-gradient(90deg, #48a9bd 0%, #54b4c7 60%, #fde047 100%);
+      box-shadow: 0 0 12px rgba(72, 169, 189, 0.55);
       transition: width 0.22s ease-out, box-shadow 0.25s ease;
     }
 
@@ -171,19 +203,19 @@
     }
 
     .search-input::placeholder {
-      color: #94a3b8;
+      color: rgba(255, 255, 255, 0.65);
     }
 
     .search-input:focus {
-      border-color: var(--primary-light);
-      box-shadow: 0 0 0 3px rgba(72, 169, 189, 0.25);
+      border-color: #fde047;
+      box-shadow: 0 0 0 3px rgba(253, 224, 71, 0.2);
     }
 
     .search-btn {
       padding: 11px 16px;
       font-size: 0.95rem;
-      font-weight: 600;
-      border: none;
+      font-weight: 700;
+      border: 1px solid var(--border);
       border-radius: 8px;
       background-color: var(--primary);
       color: #ffffff;
@@ -208,9 +240,9 @@
       left: 0;
       right: 0;
       background: var(--surface);
-      border: 1px solid var(--primary);
+      border: 1px solid var(--border);
       border-radius: 8px;
-      box-shadow: 0 10px 24px rgba(15, 23, 42, 0.45);
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.4);
       z-index: 30;
       max-height: 260px;
       overflow-y: auto;
@@ -224,7 +256,7 @@
     .suggestion-item {
       padding: 10px 14px;
       cursor: pointer;
-      border-bottom: 1px solid var(--border);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
       display: flex;
       flex-direction: column;
       gap: 3px;
@@ -235,13 +267,13 @@
     }
 
     .suggestion-item:hover {
-      background-color: var(--accent);
+      background-color: var(--card);
     }
 
     .suggestion-name {
-      font-weight: 600;
+      font-weight: 700;
       font-size: 0.94rem;
-      color: #ffffff;
+      color: #fde047;
     }
 
     .suggestion-sub {
@@ -269,16 +301,12 @@
       min-width: 0;
       padding: 12px 14px;
       font-size: 1rem;
+      font-weight: 700;
       border: 1px solid var(--border);
       border-radius: 8px;
       background-color: var(--surface);
       color: var(--text);
       cursor: pointer;
-    }
-
-    select:focus {
-      outline: none;
-      border-color: var(--primary-light);
     }
 
     .clear-btn {
@@ -287,7 +315,7 @@
       border: 1px solid var(--border);
       border-radius: 8px;
       background-color: var(--surface);
-      color: var(--text);
+      color: #fca5a5;
       font-size: 1.1rem;
       font-weight: 700;
       cursor: pointer;
@@ -299,15 +327,14 @@
     }
 
     .clear-btn:hover:not(:disabled) {
-      background-color: rgba(239, 68, 68, 0.22);
-      border-color: #f87171;
-      color: #fecaca;
+      background-color: #991b1b;
+      border-color: #fca5a5;
+      color: #ffffff;
     }
 
     .clear-btn:disabled {
       opacity: 0.4;
       cursor: not-allowed;
-      background-color: var(--surface);
     }
 
     /* =========================================================
@@ -338,7 +365,7 @@
       width: 260px;
       height: 260px;
       border-radius: 16px;
-      border: 1px solid var(--primary);
+      border: 1px solid var(--border);
       background-color: var(--surface);
       display: flex;
       align-items: center;
@@ -346,7 +373,7 @@
       overflow: hidden;
       flex-shrink: 0;
       padding: 10px;
-      box-shadow: 0 6px 16px rgba(15, 23, 42, 0.32);
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.25);
     }
 
     .image-frame img {
@@ -381,8 +408,8 @@
       display: inline-flex;
       align-items: center;
       padding: 10px 16px;
-      background-color: var(--accent);
-      border: 1px solid var(--primary);
+      background-color: var(--surface);
+      border: 1px solid var(--border);
       border-radius: 10px;
     }
 
@@ -413,7 +440,7 @@
       font-weight: 600;
       border: 1px solid var(--costume-border);
       border-radius: 8px;
-      background-color: var(--surface);
+      background-color: var(--costume-accent);
       color: var(--costume-text);
       cursor: pointer;
     }
@@ -432,7 +459,7 @@
       border: 1px solid var(--border);
       border-radius: 8px;
       background-color: var(--surface);
-      color: var(--text);
+      color: #fca5a5;
       font-size: 0.95rem;
       font-weight: 700;
       cursor: pointer;
@@ -444,15 +471,14 @@
     }
 
     .costume-clear-btn:hover:not(:disabled) {
-      background-color: rgba(239, 68, 68, 0.22);
-      border-color: #f87171;
-      color: #fecaca;
+      background-color: #991b1b;
+      border-color: #fca5a5;
+      color: #ffffff;
     }
 
     .costume-clear-btn:disabled {
       opacity: 0.35;
       cursor: not-allowed;
-      background-color: var(--surface);
     }
 
     .char-row-variants {
@@ -469,36 +495,36 @@
     .variant-btn {
       padding: 8px 14px;
       font-size: 0.9rem;
-      font-weight: 600;
+      font-weight: 700;
       border-radius: 8px;
       border: 1px solid var(--border);
       background-color: var(--surface);
-      color: var(--text);
+      color: #ffffff;
       cursor: pointer;
       transition: 0.15s;
+      white-space: nowrap;
     }
 
     .variant-btn:hover:not(:disabled) {
-      background-color: var(--surface-soft);
-      border-color: var(--primary-light);
+      border-color: #fde047;
     }
 
     .variant-btn.active[data-variant="evo"] {
       background-color: var(--evo-theme);
-      border-color: var(--evo-theme);
-      color: #ffffff;
+      border-color: #bae6fd;
+      color: #fff;
     }
 
     .variant-btn.active[data-variant="legend"] {
       background-color: var(--legend-theme);
-      border-color: var(--legend-theme);
-      color: #ffffff;
+      border-color: #fde68a;
+      color: #fff;
     }
 
     .variant-btn.active[data-variant="mystic"] {
       background-color: var(--mystic-theme);
-      border-color: var(--mystic-theme);
-      color: #ffffff;
+      border-color: #ddd6fe;
+      color: #fff;
     }
 
     .variant-btn.no-data {
@@ -547,81 +573,77 @@
 
     th, td {
       text-align: left;
-      padding: 12px;
+      padding: 11px 10px;
       border-bottom: 1px solid var(--border);
       line-height: 1.5;
-      font-size: 0.95rem;
-    }
-
-    tbody tr:last-child td {
-      border-bottom: none;
-    }
-
-    tbody tr:hover {
-      background-color: rgba(72, 169, 189, 0.08);
+      font-size: 0.94rem;
+      color: #ffffff;
     }
 
     th {
       background-color: var(--primary-hover);
       color: #ffffff;
-      font-weight: 600;
+      font-weight: 700;
+    }
+
+    th.col-desc-hdr {
+      text-align: center;
     }
 
     .col-slot {
-      width: 56px;
+      width: 48px;
       text-align: center;
     }
 
     .col-percent {
-      width: 135px;
+      width: 86px;
       text-align: center;
     }
 
     .col-growth {
-      width: 125px;
+      width: 92px;
       text-align: center;
     }
 
     .percent-badge {
       display: inline-block;
-      background-color: rgba(72, 169, 189, 0.24);
-      border: 1px solid rgba(84, 180, 199, 0.45);
-      color: #a5f3fc;
+      background-color: rgba(72, 169, 189, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: #ffffff;
       font-weight: 700;
-      padding: 4px 10px;
+      padding: 3px 8px;
       border-radius: 999px;
-      font-size: 0.88rem;
+      font-size: 0.82rem;
       white-space: nowrap;
     }
 
     .percent-none {
-      background-color: rgba(148, 163, 184, 0.16);
-      border-color: transparent;
+      background-color: rgba(255, 255, 255, 0.08);
       color: var(--muted);
     }
 
     .growth-badge {
       display: inline-block;
       background-color: var(--growth-bg);
-      border: 1px solid rgba(251, 191, 36, 0.4);
+      border: 1px solid rgba(254, 240, 138, 0.35);
       color: var(--growth-text);
       font-weight: 700;
-      padding: 4px 10px;
+      padding: 3px 8px;
       border-radius: 999px;
-      font-size: 0.86rem;
+      font-size: 0.82rem;
       white-space: nowrap;
     }
 
     .growth-empty {
-      background-color: rgba(148, 163, 184, 0.16);
+      background-color: rgba(255, 255, 255, 0.08);
       border-color: transparent;
       color: var(--muted);
     }
 
     .error-box {
-      color: #fecaca;
-      background-color: rgba(220, 38, 38, 0.22);
-      border: 1px solid #f87171;
+      color: #ffffff;
+      background-color: #991b1b;
+      border: 1px solid #fca5a5;
       padding: 14px;
       border-radius: 8px;
       margin-top: 14px;
@@ -636,8 +658,9 @@
        ========================================================= */
     @media (max-width: 700px) {
       body { padding: 12px; }
+      .top-header { margin-bottom: 12px; }
       h1 { font-size: 1.25rem; }
-      p.subtitle { font-size: 0.85rem; margin-bottom: 14px; }
+      .back-btn { padding: 5px 10px; font-size: 0.8rem; }
       .card { padding: 14px; border-radius: 10px; }
       .loading-panel { padding: 14px 12px; }
       .loading-top { font-size: 0.84rem; }
@@ -743,10 +766,11 @@
 
       /* Partition ล่าง: แสดงสกิล */
       .costume-heading { font-size: 0.84rem; padding: 6px 10px; }
-      th, td { padding: 8px 5px; font-size: 0.76rem; line-height: 1.42; }
-      .col-slot { width: 34px; }
-      .col-percent, .col-growth { width: auto; }
-      .percent-badge, .growth-badge { padding: 2px 6px; font-size: 0.7rem; }
+      th, td { padding: 8px 4px; font-size: 0.76rem; line-height: 1.42; }
+      .col-slot { width: 30px; }
+      .col-percent { width: 64px; }
+      .col-growth { width: 68px; }
+      .percent-badge, .growth-badge { padding: 2px 5px; font-size: 0.68rem; }
       .error-box { padding: 10px; font-size: 0.82rem; }
     }
   </style>
@@ -754,8 +778,12 @@
 <body>
 
 <div class="container">
-  <h1>ข้อมูลตัวละคร</h1>
-  <p class="subtitle">ค้นหาหรือเลือกตัวละคร แล้วสลับดูระดับ [อีโว], [ตำนาน] และ [มิสติก]</p>
+  <div class="top-header">
+    <div class="top-header-left">
+      <a href="https://leonhartna.github.io/getrich-info/" class="back-btn">← Back</a>
+      <h1>ข้อมูลตัวละคร</h1>
+    </div>
+  </div>
 
   <div class="card">
     <div id="loadingArea"></div>
@@ -1325,6 +1353,22 @@
       .join("");
   }
 
+  function renderSkillTable(skillsList) {
+    return `
+      <table>
+        <thead>
+          <tr>
+            <th class="col-slot">ช่อง</th>
+            <th class="col-desc-hdr">ความสามารถ</th>
+            <th class="col-percent">%</th>
+            <th class="col-growth">เติบโต</th>
+          </tr>
+        </thead>
+        <tbody>${renderSkillRows(skillsList)}</tbody>
+      </table>
+    `;
+  }
+
   function renderSelectedCharacter() {
     const selectedId = document.getElementById("charSelect").value;
     const container = document.getElementById("charDetails");
@@ -1411,35 +1455,13 @@
             ไม่มีข้อมูลความสามารถสำหรับระดับ <strong>${escapeHtml(activeLabelText)}</strong>
           </div>
         `
-        : `
-          <table>
-            <thead>
-              <tr>
-                <th class="col-slot">ช่อง</th>
-                <th>ความสามารถ (Skill)</th>
-                <th class="col-percent">เปอร์เซ็นต์</th>
-                <th class="col-growth">เติบโต</th>
-              </tr>
-            </thead>
-            <tbody>${renderSkillRows(currentSkills)}</tbody>
-          </table>
-        `;
+        : renderSkillTable(currentSkills);
 
     const costumeSectionHtml = selectedCostume
       ? `
         <div class="costume-section">
           <h3 class="costume-heading">คอสตูม${escapeHtml(selectedCostume.costumeName)}</h3>
-          <table>
-            <thead>
-              <tr>
-                <th class="col-slot">ช่อง</th>
-                <th>ความสามารถ (Skill)</th>
-                <th class="col-percent">เปอร์เซ็นต์</th>
-                <th class="col-growth">เติบโต</th>
-              </tr>
-            </thead>
-            <tbody>${renderSkillRows([selectedCostume])}</tbody>
-          </table>
+          ${renderSkillTable([selectedCostume])}
         </div>
       `
       : "";
