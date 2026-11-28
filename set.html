@@ -906,6 +906,7 @@
 
   let charDatabase = [];
   let pendantDatabase = [];
+  let mysticStep = 0;
 
   const state = {
     character: {
@@ -920,6 +921,26 @@
       { id: "", variant: "normal" }
     ]
   };
+
+  function getMysticLabel() {
+    if (mysticStep === 1) return "[มิสติก 1]";
+    if (mysticStep === 2) return "[มิสติก 2]";
+    return CHAR_TIER_LABELS.mystic;
+  }
+
+  function getCharTierLabel(tKey) {
+    if (tKey === "mystic") return getMysticLabel();
+    return CHAR_TIER_LABELS[tKey];
+  }
+
+  function getDisplayedCharSkills(charObj, tKey) {
+    const rawSkills = getVariantData(charObj, tKey).skills;
+    if (tKey !== "mystic") return rawSkills;
+    if (mysticStep === 1) {
+      return rawSkills.length > 1 ? rawSkills.slice(0, -1) : rawSkills;
+    }
+    return rawSkills;
+  }
 
   function fetchJsonp(url, timeoutMs = 15000) {
     return new Promise((resolve, reject) => {
@@ -1062,7 +1083,7 @@
           class="tier-btn ${isActive ? "active" : ""} ${charObj && !hasData ? "no-data" : ""}"
           data-tier="${tKey}"
           onclick="onCharTierClick('${tKey}')"
-        >${CHAR_TIER_LABELS[tKey]}</button>
+        >${escapeHtml(getCharTierLabel(tKey))}</button>
       `;
     }).join("");
 
@@ -1175,6 +1196,7 @@
   function onCharSelect(charId) {
     state.character.id = charId;
     state.character.costumeIndex = "";
+    mysticStep = 0;
     const charObj = charDatabase.find(c => c.id === charId);
     if (charObj) {
       document.getElementById("charSearchInput").value = charObj.name;
@@ -1185,12 +1207,30 @@
     } else {
       document.getElementById("charSearchInput").value = "";
     }
+    if (state.character.tier === "mystic") {
+      mysticStep = 1;
+    }
     renderPickerPart();
     renderSkillsPart();
   }
 
   function onCharTierClick(tKey) {
-    state.character.tier = tKey;
+    if (!CHAR_TIERS.includes(tKey)) return;
+
+    if (tKey === "mystic") {
+      if (state.character.tier !== "mystic" || mysticStep === 0) {
+        state.character.tier = "mystic";
+        mysticStep = 1;
+      } else if (mysticStep === 1) {
+        mysticStep = 2;
+      } else {
+        mysticStep = 1;
+      }
+    } else {
+      state.character.tier = tKey;
+      mysticStep = 0;
+    }
+
     renderPickerPart();
     renderSkillsPart();
   }
@@ -1203,6 +1243,7 @@
 
   function clearChar() {
     state.character = { id: "", tier: "evo", costumeIndex: "" };
+    mysticStep = 0;
     document.getElementById("charSearchInput").value = "";
     renderPickerPart();
     renderSkillsPart();
@@ -1233,6 +1274,7 @@
 
   function resetBuild() {
     state.character = { id: "", tier: "evo", costumeIndex: "" };
+    mysticStep = 0;
     state.pendants = [
       { id: "", variant: "normal" },
       { id: "", variant: "normal" },
@@ -1321,8 +1363,10 @@
   }
 
   function applyCharSuggestion(id, tier, costumeIndex, name) {
+    const nextTier = tier || "evo";
     state.character.id = id;
-    state.character.tier = tier || "evo";
+    state.character.tier = nextTier;
+    mysticStep = nextTier === "mystic" ? 1 : 0;
     state.character.costumeIndex = costumeIndex || "";
     document.getElementById("charSearchInput").value = name;
     document.getElementById("charSuggestions").classList.remove("show");
@@ -1484,7 +1528,7 @@
     if (charObj) {
       const tKey = state.character.tier;
       const vData = getVariantData(charObj, tKey);
-      const charSkills = [...vData.skills];
+      const charSkills = [...getDisplayedCharSkills(charObj, tKey)];
 
       const costumes = Array.isArray(charObj.costumes) ? charObj.costumes : [];
       let selectedCosName = "";
@@ -1501,7 +1545,7 @@
       if (charSkills.length > 0) {
         totalCount += charSkills.length;
         allRowsHtml += renderZoneRows(
-          `ตัวละคร ${CHAR_TIER_LABELS[tKey]}`,
+          `ตัวละคร ${getCharTierLabel(tKey)}`,
           charObj.name,
           selectedCosName,
           vData.image,
