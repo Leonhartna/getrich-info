@@ -290,16 +290,18 @@
       font-size: 0.88rem;
     }
 
+    /* แถบปุ่มเปิด Pop-up เลือกตัวละคร */
     .select-row {
+      position: relative;
       display: flex;
       gap: 10px;
       align-items: center;
     }
 
-    select {
+    .picker-trigger-btn {
       flex: 1;
       min-width: 0;
-      padding: 12px 14px;
+      padding: 12px 16px;
       font-size: 1rem;
       font-weight: 700;
       border: 1px solid var(--border);
@@ -307,6 +309,39 @@
       background-color: var(--surface);
       color: var(--text);
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      text-align: left;
+      transition: border-color 0.15s ease, background-color 0.15s ease;
+    }
+
+    .picker-trigger-btn:hover:not(:disabled) {
+      border-color: #fde047;
+      background-color: var(--surface-soft);
+    }
+
+    .picker-trigger-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .picker-trigger-label {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: #fde047;
+    }
+
+    .picker-trigger-label.is-placeholder {
+      color: var(--text);
+    }
+
+    .picker-trigger-icon {
+      font-size: 0.85rem;
+      color: var(--muted);
+      flex-shrink: 0;
     }
 
     .clear-btn {
@@ -335,6 +370,192 @@
     .clear-btn:disabled {
       opacity: 0.4;
       cursor: not-allowed;
+    }
+
+    /* =========================================================
+       Pop-up Overlay ลิสต์ตัวละคร:
+       - ตำแหน่งอิงใกล้ปุ่มที่กด
+       - ขยายใหญ่ขึ้น และแสดงสูงสุดประมาณ 3 ตัวละครต่อหน้า
+       - มีปุ่มลูกศรกดเลื่อนขึ้น-ลง
+       ========================================================= */
+    .char-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background-color: rgba(15, 23, 42, 0.35);
+      z-index: 100;
+      display: none;
+    }
+
+    .char-modal-backdrop.open {
+      display: block;
+    }
+
+    .char-modal-panel {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: min(600px, calc(100vw - 24px));
+      background-color: var(--card);
+      border: 1px solid rgba(255, 255, 255, 0.42);
+      border-radius: 16px;
+      box-shadow: 0 18px 42px rgba(15, 23, 42, 0.65);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .char-modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 12px 16px;
+      background-color: var(--surface);
+      border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .char-modal-title {
+      font-size: 1.08rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin: 0;
+    }
+
+    .char-modal-actions {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .char-scroll-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background-color: var(--card);
+      color: #fde047;
+      font-size: 0.92rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.15s ease, border-color 0.15s ease;
+    }
+
+    .char-scroll-btn:hover {
+      background-color: var(--primary);
+      border-color: #fde047;
+      color: #ffffff;
+    }
+
+    .char-modal-close {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background-color: var(--card);
+      color: #ffffff;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.15s ease, border-color 0.15s ease;
+    }
+
+    .char-modal-close:hover {
+      background-color: #991b1b;
+      border-color: #fca5a5;
+    }
+
+    /* แสดงสูงสุด 3 ตัวละครต่อความสูงลิสต์ พร้อมเลื่อนขึ้น-ลงได้ */
+    .char-modal-list {
+      max-height: 294px;
+      overflow-y: auto;
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      scroll-behavior: smooth;
+    }
+
+    .char-list-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      width: 100%;
+      min-height: 84px;
+      padding: 10px 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background-color: var(--surface);
+      color: #ffffff;
+      cursor: pointer;
+      text-align: left;
+      flex-shrink: 0;
+      transition: background-color 0.14s ease, border-color 0.14s ease;
+    }
+
+    .char-list-item:hover {
+      background-color: var(--surface-soft);
+      border-color: var(--primary);
+    }
+
+    .char-list-item.is-selected {
+      background-color: var(--accent);
+      border-color: #fde047;
+    }
+
+    .char-list-thumb {
+      width: 64px;
+      height: 64px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background-color: var(--surface-soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      flex-shrink: 0;
+      padding: 3px;
+    }
+
+    .char-list-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    .char-list-thumb-empty {
+      font-size: 0.72rem;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.2;
+      padding: 2px;
+    }
+
+    .char-list-name {
+      font-size: 1.06rem;
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1.35;
+      min-width: 0;
+      flex: 1;
+    }
+
+    .char-list-item.is-selected .char-list-name {
+      color: #fde047;
+    }
+
+    .char-modal-empty {
+      padding: 24px 16px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.95rem;
     }
 
     /* =========================================================
@@ -673,8 +894,14 @@
       .suggestion-sub { font-size: 0.72rem; }
       .suggestion-empty { font-size: 0.8rem; }
       .select-row { gap: 8px; }
-      select { padding: 10px 10px; font-size: 0.88rem; }
+      .picker-trigger-btn { padding: 10px 12px; font-size: 0.88rem; }
       .clear-btn { width: 40px; height: 40px; font-size: 0.95rem; }
+
+      .char-modal-list { max-height: 258px; }
+      .char-list-item { min-height: 74px; padding: 8px 10px; gap: 10px; }
+      .char-list-thumb { width: 54px; height: 54px; }
+      .char-list-name { font-size: 0.95rem; }
+      .char-scroll-btn, .char-modal-close { width: 32px; height: 32px; font-size: 0.82rem; }
 
       .char-layout {
         margin-top: 16px;
@@ -812,7 +1039,17 @@
       </div>
 
       <div class="select-row">
-        <select id="charSelect" onchange="handleCharDropdownChange()"></select>
+        <input id="charSelect" type="hidden" value="" />
+        <button
+          id="openCharModalBtn"
+          class="picker-trigger-btn"
+          type="button"
+          onclick="openCharModal()"
+          disabled
+        >
+          <span id="pickerTriggerLabel" class="picker-trigger-label is-placeholder">เลือกตัวละคร</span>
+          <span class="picker-trigger-icon">▼</span>
+        </button>
         <button
           id="clearSelectionBtn"
           class="clear-btn"
@@ -826,6 +1063,46 @@
     </div>
 
     <div id="charDetails"></div>
+  </div>
+</div>
+
+<!-- Pop-up Overlay ลิสต์ตัวละคร -->
+<div
+  id="charModalBackdrop"
+  class="char-modal-backdrop"
+  role="dialog"
+  aria-modal="true"
+  aria-labelledby="charModalTitle"
+  onclick="handleModalBackdropClick(event)"
+>
+  <div id="charModalPanel" class="char-modal-panel" onclick="event.stopPropagation()">
+    <div class="char-modal-header">
+      <h2 id="charModalTitle" class="char-modal-title">เลือกตัวละคร</h2>
+      <div class="char-modal-actions">
+        <button
+          type="button"
+          class="char-scroll-btn"
+          title="เลื่อนขึ้น"
+          aria-label="เลื่อนขึ้น"
+          onclick="scrollCharModalList(-1)"
+        >▲</button>
+        <button
+          type="button"
+          class="char-scroll-btn"
+          title="เลื่อนลง"
+          aria-label="เลื่อนลง"
+          onclick="scrollCharModalList(1)"
+        >▼</button>
+        <button
+          type="button"
+          class="char-modal-close"
+          title="ปิดหน้าต่าง"
+          aria-label="ปิดหน้าต่าง"
+          onclick="closeCharModal()"
+        >✕</button>
+      </div>
+    </div>
+    <div id="charModalList" class="char-modal-list"></div>
   </div>
 </div>
 
@@ -979,6 +1256,259 @@
       return [];
     }
     return character.costumes;
+  }
+
+  // สร้างลำดับ URL รูปจากเลขลำดับต่ำสุดไปสูงขึ้น (เช่น 01 -> 02 -> 03 หรือ evo -> legend -> mystic)
+  function getLowestNumberCandidateImages(character) {
+    const candidates = [];
+    const seen = new Set();
+
+    function addUrl(url) {
+      const clean = String(url || "").trim();
+      if (!clean || seen.has(clean)) return;
+      seen.add(clean);
+      candidates.push(clean);
+    }
+
+    function extractGradeRank(url) {
+      const numMatch = url.match(/(?:^|[^0-9])(0[1-9]|[1-9][0-9]?)(?:[^0-9]|$)/);
+      if (numMatch) {
+        return Number(numMatch[1]);
+      }
+      if (/evo/i.test(url)) return 1;
+      if (/legend/i.test(url)) return 2;
+      if (/mystic/i.test(url)) return 3;
+      return 999;
+    }
+
+    const rawEntries = [];
+    VARIANT_ORDER.forEach((vKey, idx) => {
+      const img = getVariantData(character, vKey).image;
+      if (img) {
+        rawEntries.push({
+          url: img,
+          rank: extractGradeRank(img),
+          fallbackOrder: idx
+        });
+      }
+    });
+
+    rawEntries.sort((a, b) => {
+      if (a.rank !== b.rank) return a.rank - b.rank;
+      return a.fallbackOrder - b.fallbackOrder;
+    });
+
+    rawEntries.forEach(entry => addUrl(entry.url));
+    return candidates;
+  }
+
+  function handleThumbImgError(imgEl) {
+    const fallbackListJson = imgEl.getAttribute("data-fallbacks") || "[]";
+    let fallbacks = [];
+    try {
+      fallbacks = JSON.parse(fallbackListJson);
+    } catch (e) {
+      fallbacks = [];
+    }
+
+    if (Array.isArray(fallbacks) && fallbacks.length > 0) {
+      const nextUrl = fallbacks.shift();
+      imgEl.setAttribute("data-fallbacks", JSON.stringify(fallbacks));
+      imgEl.src = nextUrl;
+      return;
+    }
+
+    imgEl.outerHTML = `<span class="char-list-thumb-empty">ไม่มีรูป</span>`;
+  }
+
+  function renderCharacterThumbHtml(character) {
+    const candidates = getLowestNumberCandidateImages(character);
+    if (candidates.length === 0) {
+      return `<span class="char-list-thumb-empty">ไม่มีรูป</span>`;
+    }
+    const primary = candidates[0];
+    const rest = candidates.slice(1);
+    const encodedRest = escapeHtml(JSON.stringify(rest));
+    return `
+      <img
+        src="${escapeHtml(primary)}"
+        alt="${escapeHtml(character.name || "")}"
+        data-fallbacks="${encodedRest}"
+        loading="lazy"
+        onerror="handleThumbImgError(this)"
+      />
+    `;
+  }
+
+  function syncPickerUiState() {
+    const select = document.getElementById("charSelect");
+    const openBtn = document.getElementById("openCharModalBtn");
+    const labelEl = document.getElementById("pickerTriggerLabel");
+    const clearBtn = document.getElementById("clearSelectionBtn");
+
+    const hasChars = charDatabase.length > 0;
+    openBtn.disabled = !hasChars;
+
+    if (!hasChars) {
+      labelEl.textContent = "ไม่พบข้อมูลตัวละคร";
+      labelEl.classList.add("is-placeholder");
+      clearBtn.disabled = true;
+      return;
+    }
+
+    const currentId = select.value;
+    const found = currentId ? charDatabase.find(c => c.id === currentId) : null;
+
+    if (found) {
+      labelEl.textContent = found.name;
+      labelEl.classList.remove("is-placeholder");
+      clearBtn.disabled = false;
+    } else {
+      labelEl.textContent = "เลือกตัวละคร";
+      labelEl.classList.add("is-placeholder");
+      clearBtn.disabled = true;
+    }
+  }
+
+  function positionCharModalNearButton() {
+    const btn = document.getElementById("openCharModalBtn");
+    const panel = document.getElementById("charModalPanel");
+    if (!btn || !panel) return;
+
+    const margin = 12;
+    const gap = 6;
+    const btnRect = btn.getBoundingClientRect();
+    const panelRect = panel.getBoundingClientRect();
+    const panelWidth = panelRect.width || Math.min(600, window.innerWidth - margin * 2);
+    const panelHeight = panelRect.height || 360;
+
+    let left = btnRect.left;
+    if (left + panelWidth > window.innerWidth - margin) {
+      left = window.innerWidth - panelWidth - margin;
+    }
+    if (left < margin) {
+      left = margin;
+    }
+
+    let top = btnRect.bottom + gap;
+    if (top + panelHeight > window.innerHeight - margin) {
+      const aboveTop = btnRect.top - panelHeight - gap;
+      if (aboveTop >= margin) {
+        top = aboveTop;
+      } else {
+        top = Math.max(margin, window.innerHeight - panelHeight - margin);
+      }
+    }
+
+    panel.style.left = `${Math.round(left)}px`;
+    panel.style.top = `${Math.round(top)}px`;
+  }
+
+  function scrollCharModalList(direction) {
+    const listEl = document.getElementById("charModalList");
+    if (!listEl) return;
+    const step = Math.max(88, Math.round(listEl.clientHeight * 0.85));
+    listEl.scrollBy({
+      top: direction * step,
+      behavior: "smooth"
+    });
+  }
+
+  function renderCharModalList() {
+    const listEl = document.getElementById("charModalList");
+    const currentId = document.getElementById("charSelect").value;
+
+    if (!Array.isArray(charDatabase) || charDatabase.length === 0) {
+      listEl.innerHTML = `<div class="char-modal-empty">ไม่พบข้อมูลตัวละคร</div>`;
+      return;
+    }
+
+    listEl.innerHTML = charDatabase
+      .map(item => {
+        const isSelected = item.id === currentId;
+        return `
+          <button
+            type="button"
+            class="char-list-item ${isSelected ? "is-selected" : ""}"
+            onclick="selectCharFromModal('${escapeJsAttr(item.id)}')"
+          >
+            <span class="char-list-thumb">${renderCharacterThumbHtml(item)}</span>
+            <span class="char-list-name">${escapeHtml(item.name)}</span>
+          </button>
+        `;
+      })
+      .join("");
+  }
+
+  function openCharModal() {
+    if (charDatabase.length === 0) return;
+    renderCharModalList();
+    const backdrop = document.getElementById("charModalBackdrop");
+    backdrop.classList.add("open");
+    requestAnimationFrame(() => {
+      positionCharModalNearButton();
+    });
+  }
+
+  function closeCharModal() {
+    const backdrop = document.getElementById("charModalBackdrop");
+    backdrop.classList.remove("open");
+  }
+
+  function handleModalBackdropClick(event) {
+    if (event.target && event.target.id === "charModalBackdrop") {
+      closeCharModal();
+    }
+  }
+
+  window.addEventListener("resize", function () {
+    const backdrop = document.getElementById("charModalBackdrop");
+    if (backdrop && backdrop.classList.contains("open")) {
+      positionCharModalNearButton();
+    }
+  });
+
+  window.addEventListener("scroll", function () {
+    const backdrop = document.getElementById("charModalBackdrop");
+    if (backdrop && backdrop.classList.contains("open")) {
+      positionCharModalNearButton();
+    }
+  }, { passive: true });
+
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape") {
+      const backdrop = document.getElementById("charModalBackdrop");
+      if (backdrop && backdrop.classList.contains("open")) {
+        closeCharModal();
+      }
+      hideSuggestions();
+    }
+  });
+
+  function selectCharFromModal(charId) {
+    const select = document.getElementById("charSelect");
+    const input = document.getElementById("charSearchInput");
+    const character = charDatabase.find(c => c.id === charId);
+    if (!character) return;
+
+    select.value = character.id;
+    input.value = character.name;
+    selectedCostumeIndex = "";
+    mysticStep = 0;
+
+    const currentSkills = getVariantSkills(character, activeVariant);
+    if (currentSkills.length === 0) {
+      const firstAvailable = VARIANT_ORDER.find(v => getVariantSkills(character, v).length > 0);
+      if (firstAvailable) {
+        activeVariant = firstAvailable;
+      }
+    }
+    if (activeVariant === "mystic") {
+      mysticStep = 1;
+    }
+
+    closeCharModal();
+    renderSelectedCharacter();
   }
 
   function handleImgError(imgEl) {
@@ -1168,12 +1698,6 @@
     }
   });
 
-  function updateClearButtonState() {
-    const select = document.getElementById("charSelect");
-    const clearBtn = document.getElementById("clearSelectionBtn");
-    clearBtn.disabled = !select.value || charDatabase.length === 0;
-  }
-
   function clearSelection() {
     const select = document.getElementById("charSelect");
     const input = document.getElementById("charSearchInput");
@@ -1184,26 +1708,6 @@
     mysticStep = 0;
     selectedCostumeIndex = "";
     hideSuggestions();
-    renderSelectedCharacter();
-  }
-
-  function handleCharDropdownChange() {
-    const selectedId = document.getElementById("charSelect").value;
-    selectedCostumeIndex = "";
-    mysticStep = 0;
-    const character = charDatabase.find(c => c.id === selectedId);
-    if (character) {
-      const currentSkills = getVariantSkills(character, activeVariant);
-      if (currentSkills.length === 0) {
-        const firstAvailable = VARIANT_ORDER.find(v => getVariantSkills(character, v).length > 0);
-        if (firstAvailable) {
-          activeVariant = firstAvailable;
-        }
-      }
-    }
-    if (activeVariant === "mystic") {
-      mysticStep = 1;
-    }
     renderSelectedCharacter();
   }
 
@@ -1294,24 +1798,10 @@
       }
 
       charDatabase = json.data;
-
-      if (charDatabase.length === 0) {
-        select.innerHTML = `<option value="">ไม่พบข้อมูลตัวละคร</option>`;
-        await finishLoadingBarAndShowControls();
-        updateClearButtonState();
-        return;
-      }
-
-      const placeholderOption = `<option value="">เลือกตัวละคร</option>`;
-      const itemOptions = charDatabase
-        .map(item => `<option value="${escapeHtml(item.id)}">${escapeHtml(item.name)}</option>`)
-        .join("");
-
-      select.innerHTML = placeholderOption + itemOptions;
       select.value = "";
 
       await finishLoadingBarAndShowControls();
-      updateClearButtonState();
+      syncPickerUiState();
       renderSelectedCharacter();
     } catch (error) {
       stopLoadingBar();
@@ -1373,7 +1863,7 @@
     const selectedId = document.getElementById("charSelect").value;
     const container = document.getElementById("charDetails");
 
-    updateClearButtonState();
+    syncPickerUiState();
 
     if (!selectedId) {
       container.innerHTML = "";
